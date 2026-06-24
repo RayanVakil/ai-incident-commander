@@ -1,0 +1,116 @@
+{
+  "description": "Runtime call dependency graph. 'depends_on' lists synchronous downstream calls; 'called_by' lists upstream callers. Kafka topics couple producers/consumers asynchronously and are noted under async_dependencies.",
+  "criticality_legend": {
+    "critical": "Customer revenue path; outage = lost orders.",
+    "high": "Customer-facing; degradation visible to users.",
+    "medium": "Supporting; failure is recoverable / async."
+  },
+  "services": [
+    {
+      "service": "frontend",
+      "criticality": "high",
+      "depends_on": [
+        "api-gateway"
+      ],
+      "called_by": [],
+      "async_dependencies": []
+    },
+    {
+      "service": "api-gateway",
+      "criticality": "critical",
+      "depends_on": [
+        "checkout-service",
+        "product-service",
+        "order-service",
+        "user-service"
+      ],
+      "called_by": [
+        "frontend"
+      ],
+      "async_dependencies": []
+    },
+    {
+      "service": "checkout-service",
+      "criticality": "critical",
+      "depends_on": [
+        "inventory-service",
+        "payment-service",
+        "order-service"
+      ],
+      "called_by": [
+        "api-gateway"
+      ],
+      "async_dependencies": []
+    },
+    {
+      "service": "payment-service",
+      "criticality": "critical",
+      "depends_on": [],
+      "called_by": [
+        "checkout-service"
+      ],
+      "async_dependencies": []
+    },
+    {
+      "service": "inventory-service",
+      "criticality": "critical",
+      "depends_on": [],
+      "called_by": [
+        "checkout-service",
+        "product-service"
+      ],
+      "async_dependencies": [
+        "consumes orders.created",
+        "consumes fulfilment.shipped",
+        "consumes inventory.sync"
+      ]
+    },
+    {
+      "service": "product-service",
+      "criticality": "high",
+      "depends_on": [
+        "inventory-service"
+      ],
+      "called_by": [
+        "api-gateway"
+      ],
+      "async_dependencies": []
+    },
+    {
+      "service": "order-service",
+      "criticality": "critical",
+      "depends_on": [
+        "notification-service"
+      ],
+      "called_by": [
+        "api-gateway",
+        "checkout-service"
+      ],
+      "async_dependencies": [
+        "produces orders.created",
+        "produces orders.updated"
+      ]
+    },
+    {
+      "service": "notification-service",
+      "criticality": "medium",
+      "depends_on": [],
+      "called_by": [
+        "order-service"
+      ],
+      "async_dependencies": [
+        "consumes orders.created",
+        "consumes orders.updated"
+      ]
+    },
+    {
+      "service": "user-service",
+      "criticality": "high",
+      "depends_on": [],
+      "called_by": [
+        "api-gateway"
+      ],
+      "async_dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,375 @@
+{
+  "description": "Narrative postmortems of PAST incidents (weeks-to-months before the live window), suitable for retrieval/RAG. Each captures how a pattern was recognized and distinguished from look-alikes. They describe history, not the current window \u2014 use them to match patterns, not as answers.",
+  "count": 8,
+  "postmortems": [
+    {
+      "incident_id": "INC-2025-0412",
+      "pattern": "misconfigured_deployment",
+      "title": "Checkout outage after pool-size config regression",
+      "severity": "SEV1",
+      "date": "2025-11-19",
+      "duration_minutes": 76,
+      "summary": "A checkout-service deploy externalized datasource config and shipped a default connection-pool size far below the previous value. The rollout passed canary (low traffic, 10 min) and health checks, but under evening peak the pool exhausted and checkout error-rate spiked. Resolved by rollback.",
+      "timeline": [
+        {
+          "time": "18:02",
+          "event": "Deploy completed; canary green, health checks passed."
+        },
+        {
+          "time": "18:31",
+          "event": "Error-rate and p95 latency begin climbing as traffic ramps."
+        },
+        {
+          "time": "18:44",
+          "event": "Pager fires: CheckoutErrorRateHigh."
+        },
+        {
+          "time": "18:59",
+          "event": "Connection-pool timeouts identified in logs."
+        },
+        {
+          "time": "19:18",
+          "event": "Rollback initiated; metrics recover within 10 min."
+        }
+      ],
+      "root_cause": "Default maximum-pool-size applied by externalized config was a fraction of the intended value; pool exhausted under peak concurrency.",
+      "contributing_factors": [
+        "Canary window too short and too low-traffic to exercise peak concurrency.",
+        "No alert on connection-pool saturation at the time.",
+        "Config diff not reviewed against capacity model."
+      ],
+      "resolution": "Rolled back to prior version; restored correct pool sizing; added canary soak at higher traffic.",
+      "lessons_learned": "Deploy-time success signals (health/canary/smoke) do NOT cover load-dependent regressions. Treat any post-deploy error-rate climb as deploy-suspect even when the deploy is marked successful.",
+      "action_items": [
+        "Add HikariCP pool-saturation alert (done).",
+        "Capacity gate: pool_size * replicas < db max_connections in CI.",
+        "Extend canary analysis window during peak hours."
+      ],
+      "tags": [
+        "deployment",
+        "connection-pool",
+        "checkout",
+        "database",
+        "contradictory-evidence"
+      ]
+    },
+    {
+      "incident_id": "INC-2025-0631",
+      "pattern": "payment_dns",
+      "title": "Intermittent payment failures from CoreDNS resolution timeouts",
+      "severity": "SEV2",
+      "date": "2026-01-08",
+      "duration_minutes": 140,
+      "summary": "payment-service intermittently failed to resolve the external payment provider hostname. Errors were sporadic and cleared on retry; the provider had no incident. Root cause was CoreDNS upstream timeouts amplified by a high ndots search-domain config.",
+      "timeline": [
+        {
+          "time": "09:14",
+          "event": "Sporadic UnknownHostException for provider host; flapping alert."
+        },
+        {
+          "time": "09:40",
+          "event": "Provider status page green; rules out provider-side."
+        },
+        {
+          "time": "10:25",
+          "event": "DNS lookup latency spikes correlated with failures."
+        },
+        {
+          "time": "11:34",
+          "event": "NodeLocal DNSCache + reduced ndots rolled out; failures stop."
+        }
+      ],
+      "root_cause": "CoreDNS upstream resolver intermittently timing out; ndots config caused extra lookups that amplified failures.",
+      "contributing_factors": [
+        "No NodeLocal DNSCache",
+        "ndots:5 default",
+        "No DNS latency alerting"
+      ],
+      "resolution": "Enabled NodeLocal DNSCache, reduced ndots via pod dnsConfig, increased CoreDNS replicas and cache TTL.",
+      "lessons_learned": "Intermittent + self-clearing + name-resolution errors + healthy provider = DNS, not provider outage. Distinguish from sustained, deploy-correlated payment failures.",
+      "action_items": [
+        "NodeLocal DNSCache fleet-wide",
+        "DNS lookup-latency SLO + alert",
+        "Pre-resolve critical egress hosts on startup"
+      ],
+      "tags": [
+        "dns",
+        "payment",
+        "intermittent",
+        "external-provider",
+        "coredns"
+      ]
+    },
+    {
+      "incident_id": "INC-2025-0588",
+      "pattern": "kafka_lag",
+      "title": "Inventory overselling during consumer lag on inventory.sync",
+      "severity": "SEV2",
+      "date": "2025-12-21",
+      "duration_minutes": 210,
+      "summary": "After a traffic increase, the inventory-sync consumer group fell behind on inventory.sync. Stock counts went stale and the oversell guard tripped, confirming orders for items that were actually depleted. Lag drained after scaling consumers and batching DB writes.",
+      "timeline": [
+        {
+          "time": "00:10",
+          "event": "Consumer lag begins growing; throughput < produce rate."
+        },
+        {
+          "time": "02:30",
+          "event": "First oversell-guard trips; negative on-hand for hot SKUs."
+        },
+        {
+          "time": "03:05",
+          "event": "Risky low-stock SKUs temporarily gated from sale."
+        },
+        {
+          "time": "03:40",
+          "event": "Consumer group scaled, partitions added; lag drains."
+        }
+      ],
+      "root_cause": "Consumer processing throughput could not keep up with produce rate; per-message DB writes and frequent rebalances slowed the consumer.",
+      "contributing_factors": [
+        "Single-message DB writes",
+        "max.poll.records untuned",
+        "No lag-based autoscaling"
+      ],
+      "resolution": "Scaled consumers to partition count, added partitions, batched writes, tuned poll config, made processing idempotent.",
+      "lessons_learned": "Kafka lag is a throughput problem, not a latency spike \u2014 symptoms are stale data and data-integrity risk (overselling), not high request latency.",
+      "action_items": [
+        "Lag SLO + autoscale on lag",
+        "Batch consumer DB writes",
+        "Hard oversell guard at reservation time"
+      ],
+      "tags": [
+        "kafka",
+        "consumer-lag",
+        "inventory",
+        "overselling",
+        "data-integrity"
+      ]
+    },
+    {
+      "incident_id": "INC-2025-0505",
+      "pattern": "redis_outage",
+      "title": "Checkout latency spike during ElastiCache failover",
+      "severity": "SEV2",
+      "date": "2025-12-02",
+      "duration_minutes": 64,
+      "summary": "An ElastiCache (redis-cart) primary failover caused the checkout-service Redis client pool to exhaust and time out. Checkout fell back to PostgreSQL, spiking p95 latency ~4x until the client reconnected and the pool recovered.",
+      "timeline": [
+        {
+          "time": "09:06",
+          "event": "ElastiCache primary failover; client connection errors begin."
+        },
+        {
+          "time": "09:09",
+          "event": "JedisConnectionException 'could not get a resource from the pool'."
+        },
+        {
+          "time": "09:12",
+          "event": "Checkout p95 latency spikes; DB fallback engaged."
+        },
+        {
+          "time": "10:04",
+          "event": "Client reconnects, pool recovers, latency normalizes."
+        }
+      ],
+      "root_cause": "Redis client pool did not reconnect gracefully after node failover; pool exhausted while checkout fell back to slower DB reads.",
+      "contributing_factors": [
+        "Aggressive client timeouts",
+        "No cache-miss bulkhead",
+        "Recent client-library upgrade changed pool behavior"
+      ],
+      "resolution": "Tuned client reconnect, raised pool size, added bounded cache-miss fallback with timeouts and circuit breaking.",
+      "lessons_learned": "Cache failures present as a latency spike with low CPU \u2014 the work moves to the DB. Check for a failover event and any recent cache client-library change.",
+      "action_items": [
+        "Multi-AZ Redis fast failover",
+        "Client circuit breaker",
+        "Graceful degrade-to-DB with strict timeouts"
+      ],
+      "tags": [
+        "redis",
+        "cache",
+        "checkout",
+        "latency",
+        "failover"
+      ]
+    },
+    {
+      "incident_id": "INC-2025-0470",
+      "pattern": "memory_leak",
+      "title": "Recurring order-service OOMKills from an unbounded cache",
+      "severity": "SEV2",
+      "date": "2025-11-26",
+      "duration_minutes": 0,
+      "summary": "Over several days order-service pods showed a memory sawtooth: heap climbed to the limit, GC pauses lengthened, then pods were OOMKilled and restarted. A deploy weeks earlier had added an in-memory enrichment cache with no eviction and reduced the heap limit.",
+      "timeline": [
+        {
+          "time": "day 0",
+          "event": "Deploy adds enrichment cache (no eviction); -Xmx reduced."
+        },
+        {
+          "time": "day 2-6",
+          "event": "Heap-after-GC trends upward independent of traffic."
+        },
+        {
+          "time": "day 6",
+          "event": "First OOMKill + restart; sawtooth begins, recurs every few days."
+        },
+        {
+          "time": "day 9",
+          "event": "Bounded cache + eviction shipped; memory stabilizes."
+        }
+      ],
+      "root_cause": "Unbounded in-memory cache accumulated entries indefinitely; reduced heap shortened time-to-OOM.",
+      "contributing_factors": [
+        "No cache size bound / eviction",
+        "Heap limit lowered in same deploy",
+        "No heap-after-GC trend alert"
+      ],
+      "resolution": "Bounded the cache with LRU eviction; restored heap headroom; added long-soak canary.",
+      "lessons_learned": "A slow leak passes all deploy-time gates and only manifests days later. Pin leak onset to the deploy that changed memory behavior; rolling restarts are only a stopgap.",
+      "action_items": [
+        "Heap-after-GC trend alert",
+        "Bounded caches mandatory",
+        "Long-soak memory canary before prod"
+      ],
+      "tags": [
+        "memory-leak",
+        "oom",
+        "order-service",
+        "jvm",
+        "gc",
+        "delayed-onset"
+      ]
+    },
+    {
+      "incident_id": "INC-2025-0349",
+      "pattern": "payment_provider_outage",
+      "title": "Provider-side degradation caused authorization failures",
+      "severity": "SEV1",
+      "date": "2025-10-30",
+      "duration_minutes": 92,
+      "summary": "The external payment provider had a regional degradation returning 5xx and timeouts. Unlike DNS or pool issues, errors were sustained, provider-side, and independent of our deploys. Mitigated by failing over to the secondary provider region.",
+      "timeline": [
+        {
+          "time": "14:03",
+          "event": "Authorization 5xx/timeout rate jumps sharply."
+        },
+        {
+          "time": "14:10",
+          "event": "Provider status page reports regional incident."
+        },
+        {
+          "time": "14:35",
+          "event": "Failover to secondary provider region; retry queue enabled."
+        },
+        {
+          "time": "15:35",
+          "event": "Provider recovers; failover reverted."
+        }
+      ],
+      "root_cause": "External provider regional outage; not caused by any ShopFabric change.",
+      "contributing_factors": [
+        "Single provider region in hot path",
+        "No automatic provider failover"
+      ],
+      "resolution": "Manual failover to secondary region; payment retry queue absorbed transient failures.",
+      "lessons_learned": "Provider outages are sustained, provider-confirmed, and deploy-independent \u2014 contrast with DNS (intermittent) and pool/config (deploy-correlated).",
+      "action_items": [
+        "Automatic multi-provider failover",
+        "Provider synthetic health checks",
+        "Circuit breaker around provider calls"
+      ],
+      "tags": [
+        "payment",
+        "external-provider",
+        "outage",
+        "failover"
+      ]
+    },
+    {
+      "incident_id": "INC-2025-0288",
+      "pattern": "cache_stampede",
+      "title": "Cache stampede after synchronized TTL expiry",
+      "severity": "SEV2",
+      "date": "2025-10-12",
+      "duration_minutes": 48,
+      "summary": "A large set of product cache keys shared a TTL and expired together, sending a thundering herd to the database. DB load spiked and latency cliffed until TTL jitter and request coalescing were added.",
+      "timeline": [
+        {
+          "time": "12:00",
+          "event": "Mass key expiry; cache hit-rate collapses."
+        },
+        {
+          "time": "12:03",
+          "event": "DB load and latency spike (thundering herd)."
+        },
+        {
+          "time": "12:28",
+          "event": "Hot keys pre-warmed; single-flight added; recovery."
+        }
+      ],
+      "root_cause": "Synchronized TTLs with no jitter and no request coalescing caused a stampede to the backing DB on expiry.",
+      "contributing_factors": [
+        "No TTL jitter",
+        "No single-flight on cache miss"
+      ],
+      "resolution": "Added TTL jitter, single-flight cache fills, pre-warmed hot keys.",
+      "lessons_learned": "A cache stampede shows DB load spiking right after a cache hit-rate cliff \u2014 distinct from a Redis connectivity failure.",
+      "action_items": [
+        "Standardize TTL jitter",
+        "Single-flight cache library",
+        "Soft-TTL async refresh"
+      ],
+      "tags": [
+        "cache",
+        "stampede",
+        "product",
+        "database",
+        "ttl"
+      ]
+    },
+    {
+      "incident_id": "INC-2025-0203",
+      "pattern": "cert_expiration",
+      "title": "mTLS certificate expiry broke service-to-service calls",
+      "severity": "SEV2",
+      "date": "2025-09-18",
+      "duration_minutes": 53,
+      "summary": "An internal mTLS certificate expired at a precise timestamp because the cert-manager auto-renewal job had silently failed weeks earlier. Calls failed with TLS handshake errors until the cert was rotated.",
+      "timeline": [
+        {
+          "time": "00:00",
+          "event": "Certificate expires; TLS handshake failures begin instantly."
+        },
+        {
+          "time": "00:08",
+          "event": "Errors localized to mTLS handshake, not app logic."
+        },
+        {
+          "time": "00:41",
+          "event": "Certificate rotated manually; pods restarted; recovery."
+        }
+      ],
+      "root_cause": "Expired mTLS certificate; auto-renewal job had been failing silently.",
+      "contributing_factors": [
+        "No renewal-job monitoring",
+        "No expiry alerting at 21/14/7 days"
+      ],
+      "resolution": "Manual rotation, restart, fixed and monitored the renewal job.",
+      "lessons_learned": "Cert expiry causes a sudden failure at a fixed timestamp with handshake errors \u2014 not a gradual climb. Expiry warnings weeks out are NOT the same as an active expiry.",
+      "action_items": [
+        "Expiry alerts at 21/14/7 days",
+        "Monitor cert-manager renewal job",
+        "Shorter-lived auto-rotated certs"
+      ],
+      "tags": [
+        "tls",
+        "certificate",
+        "expiry",
+        "mtls",
+        "scheduled-failure"
+      ]
+    }
+  ]
+}

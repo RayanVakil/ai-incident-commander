@@ -1,0 +1,1776 @@
+{
+  "description": "Customer-reported issues from support, chat and social channels over 30 days. Free text, unlabeled, lagging real onset by minutes to hours. Most reports are routine and unrelated to any incident; a minority cluster around real events. Use volume + timing + wording to corroborate (never to prove) a hypothesis.",
+  "count": 125,
+  "reports": [
+    {
+      "report_id": "CR-0093",
+      "timestamp": "2026-05-18T03:51:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_cf56d11c",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Where is my package? Tracking hasn't updated in 4 days.",
+      "tags": [
+        "shipping",
+        "delivery"
+      ]
+    },
+    {
+      "report_id": "CR-0094",
+      "timestamp": "2026-05-18T19:09:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_0b9722c6",
+      "order_id": null,
+      "region": "us-west",
+      "sentiment": "neutral",
+      "message": "Wrong size delivered, I ordered medium and got small.",
+      "tags": [
+        "fulfilment",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0125",
+      "timestamp": "2026-05-19T07:01:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_58a85cd8",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Wrong size delivered, I ordered medium and got small.",
+      "tags": [
+        "fulfilment",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0068",
+      "timestamp": "2026-05-20T15:26:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_bfddcff6",
+      "order_id": "ord_7fa28b9fb8",
+      "region": "us-west",
+      "sentiment": "neutral",
+      "message": "Loyalty points didn't get added for my last purchase.",
+      "tags": [
+        "loyalty",
+        "account"
+      ]
+    },
+    {
+      "report_id": "CR-0072",
+      "timestamp": "2026-05-20T19:44:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_3bc310f6",
+      "order_id": "ord_49b1adb474",
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "The app crashes on my Android 9 phone when opening the cart.",
+      "tags": [
+        "mobile",
+        "crash"
+      ]
+    },
+    {
+      "report_id": "CR-0088",
+      "timestamp": "2026-05-21T07:55:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_1cb81d17",
+      "order_id": "ord_0f23ba544f",
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Newsletter keeps emailing me twice.",
+      "tags": [
+        "email",
+        "notifications"
+      ]
+    },
+    {
+      "report_id": "CR-0047",
+      "timestamp": "2026-05-21T20:10:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_c978d12d",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Order page gave an error for a moment, then worked after refresh.",
+      "tags": [
+        "orders",
+        "transient"
+      ]
+    },
+    {
+      "report_id": "CR-0100",
+      "timestamp": "2026-05-22T13:46:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_e52460a1",
+      "order_id": "ord_e27fd687a6",
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Where is my package? Tracking hasn't updated in 4 days.",
+      "tags": [
+        "shipping",
+        "delivery"
+      ]
+    },
+    {
+      "report_id": "CR-0102",
+      "timestamp": "2026-05-23T19:52:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_bc81e5e7",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Newsletter keeps emailing me twice.",
+      "tags": [
+        "email",
+        "notifications"
+      ]
+    },
+    {
+      "report_id": "CR-0124",
+      "timestamp": "2026-05-25T07:37:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_c81d40ee",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Love the new cart design! Much easier to use.",
+      "tags": [
+        "feedback"
+      ]
+    },
+    {
+      "report_id": "CR-0081",
+      "timestamp": "2026-05-25T13:45:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_f9cf6e4a",
+      "order_id": "ord_253d987dab",
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Item out of stock for weeks, when will it return?",
+      "tags": [
+        "inventory",
+        "restock"
+      ]
+    },
+    {
+      "report_id": "CR-0067",
+      "timestamp": "2026-05-25T15:23:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_31479ff4",
+      "order_id": "ord_eff60693ae",
+      "region": "us-west",
+      "sentiment": "positive",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0119",
+      "timestamp": "2026-05-26T08:30:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_96938454",
+      "order_id": "ord_e3d552d8a1",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "My promo code SAVE20 isn't being applied at checkout.",
+      "tags": [
+        "promo",
+        "pricing"
+      ]
+    },
+    {
+      "report_id": "CR-0060",
+      "timestamp": "2026-05-26T21:26:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_0a07ed35",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Search doesn't find the product even though it's on the site.",
+      "tags": [
+        "search"
+      ]
+    },
+    {
+      "report_id": "CR-0061",
+      "timestamp": "2026-05-26T23:57:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_a0e94fa9",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Product photos don't match what I received.",
+      "tags": [
+        "catalog",
+        "quality"
+      ]
+    },
+    {
+      "report_id": "CR-0043",
+      "timestamp": "2026-05-28T14:12:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_f03e9907",
+      "order_id": "ord_962fae5e6b",
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Got an error paying, tried again and it went through. Weird.",
+      "tags": [
+        "payment",
+        "intermittent"
+      ]
+    },
+    {
+      "report_id": "CR-0083",
+      "timestamp": "2026-05-28T16:03:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_515523fc",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Loyalty points didn't get added for my last purchase.",
+      "tags": [
+        "loyalty",
+        "account"
+      ]
+    },
+    {
+      "report_id": "CR-0122",
+      "timestamp": "2026-05-28T20:56:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_4c24457f",
+      "order_id": null,
+      "region": "us-west",
+      "sentiment": "positive",
+      "message": "Loyalty points didn't get added for my last purchase.",
+      "tags": [
+        "loyalty",
+        "account"
+      ]
+    },
+    {
+      "report_id": "CR-0056",
+      "timestamp": "2026-05-29T01:55:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_a017e7a6",
+      "order_id": "ord_3857d748f6",
+      "region": "apac",
+      "sentiment": "positive",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0066",
+      "timestamp": "2026-05-29T02:58:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_7ffa0556",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "Loyalty points didn't get added for my last purchase.",
+      "tags": [
+        "loyalty",
+        "account"
+      ]
+    },
+    {
+      "report_id": "CR-0065",
+      "timestamp": "2026-05-29T10:46:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_3bc43b6f",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Love the new cart design! Much easier to use.",
+      "tags": [
+        "feedback"
+      ]
+    },
+    {
+      "report_id": "CR-0095",
+      "timestamp": "2026-05-29T12:55:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_a16d7e4b",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0105",
+      "timestamp": "2026-05-29T15:16:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_4dc4f96c",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Love the new cart design! Much easier to use.",
+      "tags": [
+        "feedback"
+      ]
+    },
+    {
+      "report_id": "CR-0059",
+      "timestamp": "2026-05-29T18:54:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_2ae9b69c",
+      "order_id": "ord_d5521e044d",
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Love the new cart design! Much easier to use.",
+      "tags": [
+        "feedback"
+      ]
+    },
+    {
+      "report_id": "CR-0089",
+      "timestamp": "2026-05-29T20:53:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_ef59291d",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Newsletter keeps emailing me twice.",
+      "tags": [
+        "email",
+        "notifications"
+      ]
+    },
+    {
+      "report_id": "CR-0075",
+      "timestamp": "2026-05-29T21:32:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_edbcb8ca",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "I never received my password reset email.",
+      "tags": [
+        "account",
+        "email"
+      ]
+    },
+    {
+      "report_id": "CR-0054",
+      "timestamp": "2026-05-30T10:19:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_3c3e6003",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "neutral",
+      "message": "Site is slow during the sale, pages taking a while to load.",
+      "tags": [
+        "performance",
+        "sale"
+      ]
+    },
+    {
+      "report_id": "CR-0050",
+      "timestamp": "2026-05-30T10:33:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_650d9339",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Site is slow during the sale, pages taking a while to load.",
+      "tags": [
+        "performance",
+        "sale"
+      ]
+    },
+    {
+      "report_id": "CR-0051",
+      "timestamp": "2026-05-30T12:04:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_9dad5f7f",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Site is slow during the sale, pages taking a while to load.",
+      "tags": [
+        "performance",
+        "sale"
+      ]
+    },
+    {
+      "report_id": "CR-0053",
+      "timestamp": "2026-05-30T13:52:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_2aad51fc",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "neutral",
+      "message": "Site is slow during the sale, pages taking a while to load.",
+      "tags": [
+        "performance",
+        "sale"
+      ]
+    },
+    {
+      "report_id": "CR-0055",
+      "timestamp": "2026-05-30T14:18:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_047a3d77",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Site is slow during the sale, pages taking a while to load.",
+      "tags": [
+        "performance",
+        "sale"
+      ]
+    },
+    {
+      "report_id": "CR-0052",
+      "timestamp": "2026-05-30T15:54:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_0bfbdeeb",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "neutral",
+      "message": "Site is slow during the sale, pages taking a while to load.",
+      "tags": [
+        "performance",
+        "sale"
+      ]
+    },
+    {
+      "report_id": "CR-0114",
+      "timestamp": "2026-05-31T00:46:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_aad4de32",
+      "order_id": null,
+      "region": "us-west",
+      "sentiment": "positive",
+      "message": "Checkout asked me to log in again randomly.",
+      "tags": [
+        "account",
+        "session"
+      ]
+    },
+    {
+      "report_id": "CR-0108",
+      "timestamp": "2026-05-31T04:21:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_94728db9",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "positive",
+      "message": "I never received my password reset email.",
+      "tags": [
+        "account",
+        "email"
+      ]
+    },
+    {
+      "report_id": "CR-0117",
+      "timestamp": "2026-05-31T10:08:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_c719aac3",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "My promo code SAVE20 isn't being applied at checkout.",
+      "tags": [
+        "promo",
+        "pricing"
+      ]
+    },
+    {
+      "report_id": "CR-0044",
+      "timestamp": "2026-06-01T04:39:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_c5cafdd7",
+      "order_id": "ord_b8d7b59022",
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Payment failed once but worked when I retried a minute later.",
+      "tags": [
+        "payment",
+        "intermittent"
+      ]
+    },
+    {
+      "report_id": "CR-0084",
+      "timestamp": "2026-06-01T10:48:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_4aaa2b0c",
+      "order_id": "ord_4249816468",
+      "region": "us-west",
+      "sentiment": "neutral",
+      "message": "Search doesn't find the product even though it's on the site.",
+      "tags": [
+        "search"
+      ]
+    },
+    {
+      "report_id": "CR-0048",
+      "timestamp": "2026-06-01T12:10:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_6f20487b",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Order page gave an error for a moment, then worked after refresh.",
+      "tags": [
+        "orders",
+        "transient"
+      ]
+    },
+    {
+      "report_id": "CR-0086",
+      "timestamp": "2026-06-01T14:23:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_ec3d5ae3",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Where is my package? Tracking hasn't updated in 4 days.",
+      "tags": [
+        "shipping",
+        "delivery"
+      ]
+    },
+    {
+      "report_id": "CR-0112",
+      "timestamp": "2026-06-03T02:20:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_a6cfc7e6",
+      "order_id": "ord_f844549057",
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Product photos don't match what I received.",
+      "tags": [
+        "catalog",
+        "quality"
+      ]
+    },
+    {
+      "report_id": "CR-0116",
+      "timestamp": "2026-06-03T02:48:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_9328f605",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "positive",
+      "message": "Checkout asked me to log in again randomly.",
+      "tags": [
+        "account",
+        "session"
+      ]
+    },
+    {
+      "report_id": "CR-0113",
+      "timestamp": "2026-06-03T14:15:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_1623a78b",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "neutral",
+      "message": "Where is my package? Tracking hasn't updated in 4 days.",
+      "tags": [
+        "shipping",
+        "delivery"
+      ]
+    },
+    {
+      "report_id": "CR-0080",
+      "timestamp": "2026-06-03T15:54:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_22fe319f",
+      "order_id": "ord_1cbfedaf57",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "Loyalty points didn't get added for my last purchase.",
+      "tags": [
+        "loyalty",
+        "account"
+      ]
+    },
+    {
+      "report_id": "CR-0103",
+      "timestamp": "2026-06-03T17:07:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_cb734bb5",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "neutral",
+      "message": "Product photos don't match what I received.",
+      "tags": [
+        "catalog",
+        "quality"
+      ]
+    },
+    {
+      "report_id": "CR-0107",
+      "timestamp": "2026-06-03T18:08:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_ae30af05",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "positive",
+      "message": "Can you change the shipping address on my order?",
+      "tags": [
+        "orders",
+        "address"
+      ]
+    },
+    {
+      "report_id": "CR-0063",
+      "timestamp": "2026-06-04T02:05:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_5208356a",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Wrong size delivered, I ordered medium and got small.",
+      "tags": [
+        "fulfilment",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0104",
+      "timestamp": "2026-06-04T15:44:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_0d37e957",
+      "order_id": "ord_3bdfba5635",
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Checkout asked me to log in again randomly.",
+      "tags": [
+        "account",
+        "session"
+      ]
+    },
+    {
+      "report_id": "CR-0082",
+      "timestamp": "2026-06-04T18:13:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_2a15d21a",
+      "order_id": "ord_f4ed0cd9ff",
+      "region": "us-west",
+      "sentiment": "neutral",
+      "message": "Search doesn't find the product even though it's on the site.",
+      "tags": [
+        "search"
+      ]
+    },
+    {
+      "report_id": "CR-0078",
+      "timestamp": "2026-06-05T06:04:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_245777ba",
+      "order_id": "ord_5b129a4033",
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Product photos don't match what I received.",
+      "tags": [
+        "catalog",
+        "quality"
+      ]
+    },
+    {
+      "report_id": "CR-0109",
+      "timestamp": "2026-06-06T00:33:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_8188ade7",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0123",
+      "timestamp": "2026-06-06T03:33:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_04036d0f",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Item out of stock for weeks, when will it return?",
+      "tags": [
+        "inventory",
+        "restock"
+      ]
+    },
+    {
+      "report_id": "CR-0058",
+      "timestamp": "2026-06-06T08:34:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_64075ab6",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "I was charged but want a refund, item arrived damaged.",
+      "tags": [
+        "refund",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0077",
+      "timestamp": "2026-06-06T16:16:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_75cf8a91",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "positive",
+      "message": "Product photos don't match what I received.",
+      "tags": [
+        "catalog",
+        "quality"
+      ]
+    },
+    {
+      "report_id": "CR-0070",
+      "timestamp": "2026-06-06T18:08:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_a42f86ac",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0064",
+      "timestamp": "2026-06-06T20:18:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_0aa0d941",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "neutral",
+      "message": "Love the new cart design! Much easier to use.",
+      "tags": [
+        "feedback"
+      ]
+    },
+    {
+      "report_id": "CR-0079",
+      "timestamp": "2026-06-07T01:07:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_f463f417",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Love the new cart design! Much easier to use.",
+      "tags": [
+        "feedback"
+      ]
+    },
+    {
+      "report_id": "CR-0118",
+      "timestamp": "2026-06-07T02:23:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_dd7c75b4",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "My promo code SAVE20 isn't being applied at checkout.",
+      "tags": [
+        "promo",
+        "pricing"
+      ]
+    },
+    {
+      "report_id": "CR-0008",
+      "timestamp": "2026-06-07T05:54:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_c343b83f",
+      "order_id": "ord_a6879605fc",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "My payment keeps failing at checkout \u2014 tried 3 different cards.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0014",
+      "timestamp": "2026-06-07T06:04:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_a54f9e95",
+      "order_id": "ord_24536f7f92",
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Can't complete my order, the payment step times out.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0018",
+      "timestamp": "2026-06-07T06:25:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_47e150fa",
+      "order_id": "ord_2e067d82a7",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "Clicked Pay Now and it just spins forever, never completes.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0016",
+      "timestamp": "2026-06-07T07:47:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_3e8be72e",
+      "order_id": "ord_8b1464a577",
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Can't complete my order, the payment step times out.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0045",
+      "timestamp": "2026-06-07T12:55:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_8d1fea11",
+      "order_id": "ord_d1feb2b3e3",
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Got an error paying, tried again and it went through. Weird.",
+      "tags": [
+        "payment",
+        "intermittent"
+      ]
+    },
+    {
+      "report_id": "CR-0013",
+      "timestamp": "2026-06-07T15:30:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_f0e0ed1e",
+      "order_id": "ord_eb05ea6f4a",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Checkout says 'something went wrong' every time I try to pay.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0004",
+      "timestamp": "2026-06-07T15:46:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_00f0e67e",
+      "order_id": "ord_c084f82ebb",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "My payment keeps failing at checkout \u2014 tried 3 different cards.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0101",
+      "timestamp": "2026-06-07T16:12:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_6a797b3e",
+      "order_id": "ord_6ab7d1b5de",
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0005",
+      "timestamp": "2026-06-07T17:43:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_bd1d4e5b",
+      "order_id": "ord_ea5de5f482",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Tried to buy twice, both times it hung on the payment screen.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0001",
+      "timestamp": "2026-06-07T19:05:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_383d475d",
+      "order_id": "ord_68f6d2324d",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "Can't complete my order, the payment step times out.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0020",
+      "timestamp": "2026-06-07T19:48:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_33d854e5",
+      "order_id": "ord_a0d7fbced8",
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Checkout says 'something went wrong' every time I try to pay.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0022",
+      "timestamp": "2026-06-07T20:29:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_904f7ec9",
+      "order_id": "ord_83161c2cb1",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "My payment keeps failing at checkout \u2014 tried 3 different cards.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0012",
+      "timestamp": "2026-06-07T20:58:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_b5f65d6e",
+      "order_id": "ord_3e42dc207f",
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Tried to buy twice, both times it hung on the payment screen.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0006",
+      "timestamp": "2026-06-07T21:05:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_804f6944",
+      "order_id": "ord_07f497435c",
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "Can't complete my order, the payment step times out.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0010",
+      "timestamp": "2026-06-07T22:17:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_7f297501",
+      "order_id": "ord_d2ab023c2c",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Can't complete my order, the payment step times out.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0007",
+      "timestamp": "2026-06-07T22:59:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_6963afd5",
+      "order_id": "ord_a9cd8249af",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "Can't complete my order, the payment step times out.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0019",
+      "timestamp": "2026-06-08T01:52:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_05b2d39b",
+      "order_id": "ord_d599d06fca",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Tried to buy twice, both times it hung on the payment screen.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0011",
+      "timestamp": "2026-06-08T02:19:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_e47c8ac9",
+      "order_id": "ord_3fe069359f",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Clicked Pay Now and it just spins forever, never completes.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0002",
+      "timestamp": "2026-06-08T02:33:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_3e3effc6",
+      "order_id": "ord_fd8b2ebb31",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Can't complete my order, the payment step times out.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0021",
+      "timestamp": "2026-06-08T02:36:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_7cd35859",
+      "order_id": "ord_01c512a3ee",
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Tried to buy twice, both times it hung on the payment screen.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0087",
+      "timestamp": "2026-06-08T03:19:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_ac592ded",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Item out of stock for weeks, when will it return?",
+      "tags": [
+        "inventory",
+        "restock"
+      ]
+    },
+    {
+      "report_id": "CR-0003",
+      "timestamp": "2026-06-08T04:37:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_141f0690",
+      "order_id": "ord_2140737a13",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Tried to buy twice, both times it hung on the payment screen.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0009",
+      "timestamp": "2026-06-08T04:43:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_2ab13dc2",
+      "order_id": "ord_cb5ee4b609",
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Clicked Pay Now and it just spins forever, never completes.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0017",
+      "timestamp": "2026-06-08T05:02:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_95563518",
+      "order_id": "ord_c24d6e5719",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Tried to buy twice, both times it hung on the payment screen.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0015",
+      "timestamp": "2026-06-08T05:19:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_5cb2767a",
+      "order_id": "ord_25a27fa431",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "Can't complete my order, the payment step times out.",
+      "tags": [
+        "checkout",
+        "payment",
+        "cannot_pay"
+      ]
+    },
+    {
+      "report_id": "CR-0121",
+      "timestamp": "2026-06-08T12:48:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_1e72ffc6",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Checkout asked me to log in again randomly.",
+      "tags": [
+        "account",
+        "session"
+      ]
+    },
+    {
+      "report_id": "CR-0073",
+      "timestamp": "2026-06-08T13:21:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_df09cd82",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "The app crashes on my Android 9 phone when opening the cart.",
+      "tags": [
+        "mobile",
+        "crash"
+      ]
+    },
+    {
+      "report_id": "CR-0099",
+      "timestamp": "2026-06-08T14:25:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_b45869b1",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "The app crashes on my Android 9 phone when opening the cart.",
+      "tags": [
+        "mobile",
+        "crash"
+      ]
+    },
+    {
+      "report_id": "CR-0092",
+      "timestamp": "2026-06-08T15:03:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_37fcf1eb",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Search doesn't find the product even though it's on the site.",
+      "tags": [
+        "search"
+      ]
+    },
+    {
+      "report_id": "CR-0085",
+      "timestamp": "2026-06-09T12:54:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_9b2baf3f",
+      "order_id": "ord_33fad9895c",
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "Loyalty points didn't get added for my last purchase.",
+      "tags": [
+        "loyalty",
+        "account"
+      ]
+    },
+    {
+      "report_id": "CR-0115",
+      "timestamp": "2026-06-09T14:54:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_377f871c",
+      "order_id": "ord_b51d62cb38",
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0074",
+      "timestamp": "2026-06-09T22:51:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_d3983a74",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "neutral",
+      "message": "I was charged but want a refund, item arrived damaged.",
+      "tags": [
+        "refund",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0037",
+      "timestamp": "2026-06-10T04:07:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_6f683c27",
+      "order_id": "ord_0c6b34cc95",
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "I ordered an item that showed in stock, then got an email it's unavailable.",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0041",
+      "timestamp": "2026-06-10T06:30:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_079f473b",
+      "order_id": "ord_a5808c3e5c",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "Order cancelled saying out of stock, but it said available when I bought it!",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0036",
+      "timestamp": "2026-06-10T08:24:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_53e998d7",
+      "order_id": "ord_c2e9448669",
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "I ordered an item that showed in stock, then got an email it's unavailable.",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0035",
+      "timestamp": "2026-06-10T09:28:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_0f4efd2c",
+      "order_id": "ord_4beaadf078",
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Bought the last one in stock but my order got cancelled hours later.",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0042",
+      "timestamp": "2026-06-10T13:45:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_b25f406f",
+      "order_id": "ord_0988791572",
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Your site let me order something that was actually sold out.",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0040",
+      "timestamp": "2026-06-10T17:44:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_db44f64f",
+      "order_id": "ord_23217f54ae",
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "Order cancelled saying out of stock, but it said available when I bought it!",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0038",
+      "timestamp": "2026-06-11T08:26:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_966bb8f9",
+      "order_id": "ord_488425876a",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "Your site let me order something that was actually sold out.",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0069",
+      "timestamp": "2026-06-11T09:06:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_bb74e096",
+      "order_id": "ord_e0a13e8cbe",
+      "region": "eu-west",
+      "sentiment": "positive",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0071",
+      "timestamp": "2026-06-11T23:59:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_0ea00923",
+      "order_id": "ord_2b1a515faa",
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "Wrong size delivered, I ordered medium and got small.",
+      "tags": [
+        "fulfilment",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0039",
+      "timestamp": "2026-06-12T00:57:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_b3b15fea",
+      "order_id": "ord_e0928da4d9",
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Bought the last one in stock but my order got cancelled hours later.",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0111",
+      "timestamp": "2026-06-12T01:13:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_170d5113",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "positive",
+      "message": "I was charged but want a refund, item arrived damaged.",
+      "tags": [
+        "refund",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0034",
+      "timestamp": "2026-06-12T04:28:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_8169c7b9",
+      "order_id": "ord_35ca5e4073",
+      "region": "us-west",
+      "sentiment": "negative",
+      "message": "Your site let me order something that was actually sold out.",
+      "tags": [
+        "inventory",
+        "oversold",
+        "cancelled"
+      ]
+    },
+    {
+      "report_id": "CR-0098",
+      "timestamp": "2026-06-12T11:30:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_4519215d",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Product photos don't match what I received.",
+      "tags": [
+        "catalog",
+        "quality"
+      ]
+    },
+    {
+      "report_id": "CR-0049",
+      "timestamp": "2026-06-12T16:19:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_365656fc",
+      "order_id": null,
+      "region": "us-west",
+      "sentiment": "neutral",
+      "message": "Order page gave an error for a moment, then worked after refresh.",
+      "tags": [
+        "orders",
+        "transient"
+      ]
+    },
+    {
+      "report_id": "CR-0096",
+      "timestamp": "2026-06-12T18:26:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_662974c8",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Checkout asked me to log in again randomly.",
+      "tags": [
+        "account",
+        "session"
+      ]
+    },
+    {
+      "report_id": "CR-0026",
+      "timestamp": "2026-06-13T09:03:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_4db3c5a5",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "Took forever to place my order, almost gave up.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0023",
+      "timestamp": "2026-06-13T10:11:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_06e77639",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Took forever to place my order, almost gave up.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0110",
+      "timestamp": "2026-06-13T10:11:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_a5c1e931",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "neutral",
+      "message": "Wrong size delivered, I ordered medium and got small.",
+      "tags": [
+        "fulfilment",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0029",
+      "timestamp": "2026-06-13T11:56:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_788f81c4",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "Site is really laggy at checkout this afternoon.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0027",
+      "timestamp": "2026-06-13T13:02:00Z",
+      "channel": "support_ticket",
+      "customer_id": "usr_b9f90615",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Checkout is incredibly slow today, took over a minute to load.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0031",
+      "timestamp": "2026-06-13T14:19:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_b4ee47b7",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Took forever to place my order, almost gave up.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0033",
+      "timestamp": "2026-06-13T17:08:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_8e6e7119",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Took forever to place my order, almost gave up.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0024",
+      "timestamp": "2026-06-13T18:57:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_6755d24f",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "The cart page keeps loading and loading before I can pay.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0025",
+      "timestamp": "2026-06-13T19:26:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_9ad3842a",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "Took forever to place my order, almost gave up.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0028",
+      "timestamp": "2026-06-13T20:58:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_4d75941b",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "The cart page keeps loading and loading before I can pay.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0032",
+      "timestamp": "2026-06-14T00:18:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_57b4c6a7",
+      "order_id": null,
+      "region": "apac",
+      "sentiment": "negative",
+      "message": "The cart page keeps loading and loading before I can pay.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0030",
+      "timestamp": "2026-06-14T01:11:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_96a1b013",
+      "order_id": null,
+      "region": "eu-west",
+      "sentiment": "negative",
+      "message": "Took forever to place my order, almost gave up.",
+      "tags": [
+        "checkout",
+        "slow"
+      ]
+    },
+    {
+      "report_id": "CR-0106",
+      "timestamp": "2026-06-14T11:59:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_5e9716bc",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "positive",
+      "message": "Newsletter keeps emailing me twice.",
+      "tags": [
+        "email",
+        "notifications"
+      ]
+    },
+    {
+      "report_id": "CR-0097",
+      "timestamp": "2026-06-14T14:22:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_d0aabbfe",
+      "order_id": null,
+      "region": "us-east",
+      "sentiment": "negative",
+      "message": "Where is my package? Tracking hasn't updated in 4 days.",
+      "tags": [
+        "shipping",
+        "delivery"
+      ]
+    },
+    {
+      "report_id": "CR-0046",
+      "timestamp": "2026-06-15T09:44:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_6cc7e644",
+      "order_id": "ord_39782a55aa",
+      "region": "us-west",
+      "sentiment": "neutral",
+      "message": "Payment failed once but worked when I retried a minute later.",
+      "tags": [
+        "payment",
+        "intermittent"
+      ]
+    },
+    {
+      "report_id": "CR-0062",
+      "timestamp": "2026-06-15T17:22:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_764baf60",
+      "order_id": "ord_322cdafc0c",
+      "region": "apac",
+      "sentiment": "positive",
+      "message": "Loyalty points didn't get added for my last purchase.",
+      "tags": [
+        "loyalty",
+        "account"
+      ]
+    },
+    {
+      "report_id": "CR-0120",
+      "timestamp": "2026-06-15T19:39:00Z",
+      "channel": "app_store_review",
+      "customer_id": "usr_e4690696",
+      "order_id": "ord_8355b76e66",
+      "region": "eu-west",
+      "sentiment": "neutral",
+      "message": "Gift card balance shows zero but I just bought it.",
+      "tags": [
+        "payments",
+        "giftcard"
+      ]
+    },
+    {
+      "report_id": "CR-0076",
+      "timestamp": "2026-06-16T12:35:00Z",
+      "channel": "twitter",
+      "customer_id": "usr_b95f0eff",
+      "order_id": null,
+      "region": "latam",
+      "sentiment": "neutral",
+      "message": "Wrong size delivered, I ordered medium and got small.",
+      "tags": [
+        "fulfilment",
+        "returns"
+      ]
+    },
+    {
+      "report_id": "CR-0057",
+      "timestamp": "2026-06-16T15:59:00Z",
+      "channel": "live_chat",
+      "customer_id": "usr_faa7d44c",
+      "order_id": "ord_1920aa9884",
+      "region": "latam",
+      "sentiment": "negative",
+      "message": "Love the new cart design! Much easier to use.",
+      "tags": [
+        "feedback"
+      ]
+    },
+    {
+      "report_id": "CR-0090",
+      "timestamp": "2026-06-16T17:28:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_beea7060",
+      "order_id": "ord_6279dda4bb",
+      "region": "us-east",
+      "sentiment": "positive",
+      "message": "Item out of stock for weeks, when will it return?",
+      "tags": [
+        "inventory",
+        "restock"
+      ]
+    },
+    {
+      "report_id": "CR-0091",
+      "timestamp": "2026-06-16T23:01:00Z",
+      "channel": "trustpilot",
+      "customer_id": "usr_17aa9a46",
+      "order_id": null,
+      "region": "us-west",
+      "sentiment": "positive",
+      "message": "Loyalty points didn't get added for my last purchase.",
+      "tags": [
+        "loyalty",
+        "account"
+      ]
+    }
+  ]
+}

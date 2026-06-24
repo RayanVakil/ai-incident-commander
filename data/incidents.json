@@ -1,0 +1,883 @@
+{
+  "description": "Historical incident postmortems. Recurring patterns intentionally repeat; match symptoms here against live telemetry to recognize known failure modes.",
+  "count": 50,
+  "incidents": [
+    {
+      "incident_id": "INC-2026-001",
+      "title": "Intermittent payment failures traced to DNS resolution",
+      "pattern": "payment_dns",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2026-05-13T12:00:00Z",
+      "resolved_at": "2026-05-13T15:00:00Z",
+      "duration_minutes": 180,
+      "affected_services": [
+        "payment-service"
+      ],
+      "symptoms": "Sporadic UnknownHostException for api.globalpay-gateway.com; errors cleared on retry; no provider-side incident.",
+      "root_cause": "CoreDNS upstream resolver intermittently timing out; ndots/search-domain misconfig amplifying lookups.",
+      "remediation": "Increased CoreDNS cache TTL and replicas; added dnsConfig with reduced ndots; enabled NodeLocal DNSCache.",
+      "prevention": "NodeLocal DNSCache everywhere; alert on DNS lookup latency; pre-resolve provider host on startup."
+    },
+    {
+      "incident_id": "INC-2026-002",
+      "title": "Cache stampede after Redis eviction storm",
+      "pattern": "cache_stampede",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2026-05-01T22:00:00Z",
+      "resolved_at": "2026-05-01T22:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "product-service",
+        "checkout-service"
+      ],
+      "symptoms": "Sudden DB load spike, latency cliff, redis hit-rate collapse following mass key expiry.",
+      "root_cause": "Synchronized TTL expiry caused thundering herd to backend DB (no jitter, no request coalescing).",
+      "remediation": "Added TTL jitter, request coalescing (single-flight), pre-warmed hot keys.",
+      "prevention": "TTL jitter standard; single-flight on cache miss; soft-TTL with async refresh."
+    },
+    {
+      "incident_id": "INC-2026-003",
+      "title": "Bad deployment config caused resource exhaustion",
+      "pattern": "misconfigured_deployment",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2026-04-25T14:00:00Z",
+      "resolved_at": "2026-04-25T14:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Error-rate spike immediately after deploy; resource timeouts; recovered on rollback.",
+      "root_cause": "Deployment shipped misconfigured pool/limit value; under-provisioned a shared resource.",
+      "remediation": "Rolled back to previous version; corrected config; re-deployed with canary.",
+      "prevention": "Config diff review gate; canary + automated rollback on error-rate SLO breach."
+    },
+    {
+      "incident_id": "INC-2026-004",
+      "title": "Payment authorizations failing \u2014 external provider degraded",
+      "pattern": "payment_provider_outage",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2026-04-14T03:00:00Z",
+      "resolved_at": "2026-04-14T03:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "payment-service",
+        "checkout-service"
+      ],
+      "symptoms": "Spike in payment authorization errors; checkout success rate dropped; provider returning 5xx / timeouts.",
+      "root_cause": "External payment provider (api.globalpay-gateway.com) regional degradation; upstream gateway latency > 10s.",
+      "remediation": "Failed over to secondary provider region; enabled payment retry queue; provider resolved within 90m.",
+      "prevention": "Add multi-provider failover; circuit-breaker around provider; synthetic provider health checks."
+    },
+    {
+      "incident_id": "INC-2026-005",
+      "title": "Payment authorizations failing \u2014 external provider degraded",
+      "pattern": "payment_provider_outage",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2026-04-05T08:00:00Z",
+      "resolved_at": "2026-04-05T11:00:00Z",
+      "duration_minutes": 180,
+      "affected_services": [
+        "payment-service",
+        "checkout-service"
+      ],
+      "symptoms": "Spike in payment authorization errors; checkout success rate dropped; provider returning 5xx / timeouts.",
+      "root_cause": "External payment provider (api.globalpay-gateway.com) regional degradation; upstream gateway latency > 10s.",
+      "remediation": "Failed over to secondary provider region; enabled payment retry queue; provider resolved within 90m.",
+      "prevention": "Add multi-provider failover; circuit-breaker around provider; synthetic provider health checks."
+    },
+    {
+      "incident_id": "INC-2026-006",
+      "title": "Redis cluster failover spiked checkout latency",
+      "pattern": "redis_outage",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-03-29T20:00:00Z",
+      "resolved_at": "2026-03-29T21:30:00Z",
+      "duration_minutes": 90,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Cache connection errors, latency spike as calls fall back to DB, intermittent timeouts.",
+      "root_cause": "ElastiCache node failover; client pool exhausted / slow to reconnect; no graceful degradation.",
+      "remediation": "Client reconnect tuning, raised pool size, added cache-miss fallback with timeouts and bulkheads.",
+      "prevention": "Multi-AZ Redis with fast failover; client-side circuit breaker; degrade-gracefully on cache loss."
+    },
+    {
+      "incident_id": "INC-2026-007",
+      "title": "Bad deployment config caused resource exhaustion",
+      "pattern": "misconfigured_deployment",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2026-03-20T15:00:00Z",
+      "resolved_at": "2026-03-20T18:00:00Z",
+      "duration_minutes": 180,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Error-rate spike immediately after deploy; resource timeouts; recovered on rollback.",
+      "root_cause": "Deployment shipped misconfigured pool/limit value; under-provisioned a shared resource.",
+      "remediation": "Rolled back to previous version; corrected config; re-deployed with canary.",
+      "prevention": "Config diff review gate; canary + automated rollback on error-rate SLO breach."
+    },
+    {
+      "incident_id": "INC-2026-008",
+      "title": "Node resource contention degraded latency",
+      "pattern": "noisy_neighbor",
+      "severity": "SEV3",
+      "status": "resolved",
+      "detected_at": "2026-03-12T17:00:00Z",
+      "resolved_at": "2026-03-12T18:30:00Z",
+      "duration_minutes": 90,
+      "affected_services": [
+        "product-service"
+      ],
+      "symptoms": "Latency p99 rose on a subset of pods; CPU throttling metrics elevated; no error spike.",
+      "root_cause": "Co-located batch job saturated node CPU; missing CPU limits / anti-affinity.",
+      "remediation": "Evicted batch workload, set requests/limits, added anti-affinity.",
+      "prevention": "Right-size requests/limits; separate batch node pool; throttling alerts."
+    },
+    {
+      "incident_id": "INC-2026-009",
+      "title": "Kafka consumer lag delayed inventory sync",
+      "pattern": "kafka_lag",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-03-04T23:00:00Z",
+      "resolved_at": "2026-03-04T23:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "inventory-service",
+        "order-service"
+      ],
+      "symptoms": "Growing consumer lag on inventory.sync; stale stock counts; delayed order state transitions.",
+      "root_cause": "Consumer throughput < produce rate after traffic growth; slow DB writes in consumer; frequent rebalances.",
+      "remediation": "Scaled consumer group, increased partitions, batched DB writes, tuned max.poll.records.",
+      "prevention": "Alert on consumer lag SLO; autoscale consumers on lag; idempotent + batched processing."
+    },
+    {
+      "incident_id": "INC-2026-010",
+      "title": "Database connection saturation under peak load",
+      "pattern": "db_saturation",
+      "severity": "SEV3",
+      "status": "resolved",
+      "detected_at": "2026-02-21T10:00:00Z",
+      "resolved_at": "2026-02-21T13:00:00Z",
+      "duration_minutes": 180,
+      "affected_services": [
+        "checkout-service",
+        "order-service"
+      ],
+      "symptoms": "Rising query latency, connection wait timeouts, 'too many clients already' errors, error-rate climb.",
+      "root_cause": "Connection pool sized beyond DB max_connections during traffic peak; long-running queries holding connections.",
+      "remediation": "Reduced per-pod pool size, added PgBouncer, killed long-running queries, scaled read replicas.",
+      "prevention": "Capacity model pool_size*replicas < max_connections; PgBouncer in front of all PG; query timeouts."
+    },
+    {
+      "incident_id": "INC-2026-011",
+      "title": "Memory leak caused recurring pod OOMKills",
+      "pattern": "memory_leak",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-02-14T23:00:00Z",
+      "resolved_at": "2026-02-15T03:00:00Z",
+      "duration_minutes": 240,
+      "affected_services": [
+        "order-service"
+      ],
+      "symptoms": "Heap usage climbs over days, GC pauses lengthen, pods OOMKilled and restart, sawtooth memory graph.",
+      "root_cause": "Unbounded in-memory cache / listener accumulation; objects never evicted.",
+      "remediation": "Rolling restart for relief; bounded cache size + eviction; heap dump analysis to find retention.",
+      "prevention": "Bounded caches with eviction; memory-leak canary (long-soak); alert on heap-after-GC trend."
+    },
+    {
+      "incident_id": "INC-2026-012",
+      "title": "TLS certificate expiration broke service-to-service calls",
+      "pattern": "cert_expiration",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-02-11T00:00:00Z",
+      "resolved_at": "2026-02-11T01:30:00Z",
+      "duration_minutes": 90,
+      "affected_services": [
+        "api-gateway",
+        "payment-service"
+      ],
+      "symptoms": "Sudden TLS handshake failures at a fixed timestamp; clients see certificate expired errors.",
+      "root_cause": "Internal mTLS / egress certificate expired; auto-renewal job had silently failed weeks earlier.",
+      "remediation": "Rotated certificate manually; restarted affected pods; fixed cert-manager renewal job.",
+      "prevention": "Alert at 21/14/7 days to expiry; monitor cert-manager renewal job; shorter-lived auto-rotated certs."
+    },
+    {
+      "incident_id": "INC-2026-013",
+      "title": "TLS certificate expiration broke service-to-service calls",
+      "pattern": "cert_expiration",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-02-02T05:00:00Z",
+      "resolved_at": "2026-02-02T05:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "api-gateway",
+        "payment-service"
+      ],
+      "symptoms": "Sudden TLS handshake failures at a fixed timestamp; clients see certificate expired errors.",
+      "root_cause": "Internal mTLS / egress certificate expired; auto-renewal job had silently failed weeks earlier.",
+      "remediation": "Rotated certificate manually; restarted affected pods; fixed cert-manager renewal job.",
+      "prevention": "Alert at 21/14/7 days to expiry; monitor cert-manager renewal job; shorter-lived auto-rotated certs."
+    },
+    {
+      "incident_id": "INC-2026-014",
+      "title": "Memory leak caused recurring pod OOMKills",
+      "pattern": "memory_leak",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-01-29T23:00:00Z",
+      "resolved_at": "2026-01-30T02:00:00Z",
+      "duration_minutes": 180,
+      "affected_services": [
+        "order-service"
+      ],
+      "symptoms": "Heap usage climbs over days, GC pauses lengthen, pods OOMKilled and restart, sawtooth memory graph.",
+      "root_cause": "Unbounded in-memory cache / listener accumulation; objects never evicted.",
+      "remediation": "Rolling restart for relief; bounded cache size + eviction; heap dump analysis to find retention.",
+      "prevention": "Bounded caches with eviction; memory-leak canary (long-soak); alert on heap-after-GC trend."
+    },
+    {
+      "incident_id": "INC-2026-015",
+      "title": "Kafka consumer lag delayed inventory sync",
+      "pattern": "kafka_lag",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-01-24T02:00:00Z",
+      "resolved_at": "2026-01-24T02:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "inventory-service",
+        "order-service"
+      ],
+      "symptoms": "Growing consumer lag on inventory.sync; stale stock counts; delayed order state transitions.",
+      "root_cause": "Consumer throughput < produce rate after traffic growth; slow DB writes in consumer; frequent rebalances.",
+      "remediation": "Scaled consumer group, increased partitions, batched DB writes, tuned max.poll.records.",
+      "prevention": "Alert on consumer lag SLO; autoscale consumers on lag; idempotent + batched processing."
+    },
+    {
+      "incident_id": "INC-2026-016",
+      "title": "Kafka consumer lag delayed inventory sync",
+      "pattern": "kafka_lag",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-01-13T14:00:00Z",
+      "resolved_at": "2026-01-13T16:00:00Z",
+      "duration_minutes": 120,
+      "affected_services": [
+        "inventory-service",
+        "order-service"
+      ],
+      "symptoms": "Growing consumer lag on inventory.sync; stale stock counts; delayed order state transitions.",
+      "root_cause": "Consumer throughput < produce rate after traffic growth; slow DB writes in consumer; frequent rebalances.",
+      "remediation": "Scaled consumer group, increased partitions, batched DB writes, tuned max.poll.records.",
+      "prevention": "Alert on consumer lag SLO; autoscale consumers on lag; idempotent + batched processing."
+    },
+    {
+      "incident_id": "INC-2026-017",
+      "title": "Kafka consumer lag delayed inventory sync",
+      "pattern": "kafka_lag",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-01-07T09:00:00Z",
+      "resolved_at": "2026-01-07T12:00:00Z",
+      "duration_minutes": 180,
+      "affected_services": [
+        "inventory-service",
+        "order-service"
+      ],
+      "symptoms": "Growing consumer lag on inventory.sync; stale stock counts; delayed order state transitions.",
+      "root_cause": "Consumer throughput < produce rate after traffic growth; slow DB writes in consumer; frequent rebalances.",
+      "remediation": "Scaled consumer group, increased partitions, batched DB writes, tuned max.poll.records.",
+      "prevention": "Alert on consumer lag SLO; autoscale consumers on lag; idempotent + batched processing."
+    },
+    {
+      "incident_id": "INC-2026-018",
+      "title": "Intermittent payment failures traced to DNS resolution",
+      "pattern": "payment_dns",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2026-01-02T16:00:00Z",
+      "resolved_at": "2026-01-02T16:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "payment-service"
+      ],
+      "symptoms": "Sporadic UnknownHostException for api.globalpay-gateway.com; errors cleared on retry; no provider-side incident.",
+      "root_cause": "CoreDNS upstream resolver intermittently timing out; ndots/search-domain misconfig amplifying lookups.",
+      "remediation": "Increased CoreDNS cache TTL and replicas; added dnsConfig with reduced ndots; enabled NodeLocal DNSCache.",
+      "prevention": "NodeLocal DNSCache everywhere; alert on DNS lookup latency; pre-resolve provider host on startup."
+    },
+    {
+      "incident_id": "INC-2025-019",
+      "title": "Payment authorizations failing \u2014 external provider degraded",
+      "pattern": "payment_provider_outage",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2025-12-26T04:00:00Z",
+      "resolved_at": "2025-12-26T08:00:00Z",
+      "duration_minutes": 240,
+      "affected_services": [
+        "payment-service",
+        "checkout-service"
+      ],
+      "symptoms": "Spike in payment authorization errors; checkout success rate dropped; provider returning 5xx / timeouts.",
+      "root_cause": "External payment provider (api.globalpay-gateway.com) regional degradation; upstream gateway latency > 10s.",
+      "remediation": "Failed over to secondary provider region; enabled payment retry queue; provider resolved within 90m.",
+      "prevention": "Add multi-provider failover; circuit-breaker around provider; synthetic provider health checks."
+    },
+    {
+      "incident_id": "INC-2025-020",
+      "title": "Cache stampede after Redis eviction storm",
+      "pattern": "cache_stampede",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-12-19T01:00:00Z",
+      "resolved_at": "2025-12-19T01:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "product-service",
+        "checkout-service"
+      ],
+      "symptoms": "Sudden DB load spike, latency cliff, redis hit-rate collapse following mass key expiry.",
+      "root_cause": "Synchronized TTL expiry caused thundering herd to backend DB (no jitter, no request coalescing).",
+      "remediation": "Added TTL jitter, request coalescing (single-flight), pre-warmed hot keys.",
+      "prevention": "TTL jitter standard; single-flight on cache miss; soft-TTL with async refresh."
+    },
+    {
+      "incident_id": "INC-2025-021",
+      "title": "Bad deployment config caused resource exhaustion",
+      "pattern": "misconfigured_deployment",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2025-12-13T01:00:00Z",
+      "resolved_at": "2025-12-13T03:00:00Z",
+      "duration_minutes": 120,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Error-rate spike immediately after deploy; resource timeouts; recovered on rollback.",
+      "root_cause": "Deployment shipped misconfigured pool/limit value; under-provisioned a shared resource.",
+      "remediation": "Rolled back to previous version; corrected config; re-deployed with canary.",
+      "prevention": "Config diff review gate; canary + automated rollback on error-rate SLO breach."
+    },
+    {
+      "incident_id": "INC-2025-022",
+      "title": "Database connection saturation under peak load",
+      "pattern": "db_saturation",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2025-12-06T10:00:00Z",
+      "resolved_at": "2025-12-06T10:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "checkout-service",
+        "order-service"
+      ],
+      "symptoms": "Rising query latency, connection wait timeouts, 'too many clients already' errors, error-rate climb.",
+      "root_cause": "Connection pool sized beyond DB max_connections during traffic peak; long-running queries holding connections.",
+      "remediation": "Reduced per-pod pool size, added PgBouncer, killed long-running queries, scaled read replicas.",
+      "prevention": "Capacity model pool_size*replicas < max_connections; PgBouncer in front of all PG; query timeouts."
+    },
+    {
+      "incident_id": "INC-2025-023",
+      "title": "Cache stampede after Redis eviction storm",
+      "pattern": "cache_stampede",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-11-24T02:00:00Z",
+      "resolved_at": "2025-11-24T06:00:00Z",
+      "duration_minutes": 240,
+      "affected_services": [
+        "product-service",
+        "checkout-service"
+      ],
+      "symptoms": "Sudden DB load spike, latency cliff, redis hit-rate collapse following mass key expiry.",
+      "root_cause": "Synchronized TTL expiry caused thundering herd to backend DB (no jitter, no request coalescing).",
+      "remediation": "Added TTL jitter, request coalescing (single-flight), pre-warmed hot keys.",
+      "prevention": "TTL jitter standard; single-flight on cache miss; soft-TTL with async refresh."
+    },
+    {
+      "incident_id": "INC-2025-024",
+      "title": "Redis cluster failover spiked checkout latency",
+      "pattern": "redis_outage",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-11-12T17:00:00Z",
+      "resolved_at": "2025-11-12T17:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Cache connection errors, latency spike as calls fall back to DB, intermittent timeouts.",
+      "root_cause": "ElastiCache node failover; client pool exhausted / slow to reconnect; no graceful degradation.",
+      "remediation": "Client reconnect tuning, raised pool size, added cache-miss fallback with timeouts and bulkheads.",
+      "prevention": "Multi-AZ Redis with fast failover; client-side circuit breaker; degrade-gracefully on cache loss."
+    },
+    {
+      "incident_id": "INC-2025-025",
+      "title": "Bad deployment config caused resource exhaustion",
+      "pattern": "misconfigured_deployment",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2025-11-08T14:00:00Z",
+      "resolved_at": "2025-11-08T16:00:00Z",
+      "duration_minutes": 120,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Error-rate spike immediately after deploy; resource timeouts; recovered on rollback.",
+      "root_cause": "Deployment shipped misconfigured pool/limit value; under-provisioned a shared resource.",
+      "remediation": "Rolled back to previous version; corrected config; re-deployed with canary.",
+      "prevention": "Config diff review gate; canary + automated rollback on error-rate SLO breach."
+    },
+    {
+      "incident_id": "INC-2025-026",
+      "title": "Bad deployment config caused resource exhaustion",
+      "pattern": "misconfigured_deployment",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2025-10-28T20:00:00Z",
+      "resolved_at": "2025-10-28T20:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Error-rate spike immediately after deploy; resource timeouts; recovered on rollback.",
+      "root_cause": "Deployment shipped misconfigured pool/limit value; under-provisioned a shared resource.",
+      "remediation": "Rolled back to previous version; corrected config; re-deployed with canary.",
+      "prevention": "Config diff review gate; canary + automated rollback on error-rate SLO breach."
+    },
+    {
+      "incident_id": "INC-2025-027",
+      "title": "Payment authorizations failing \u2014 external provider degraded",
+      "pattern": "payment_provider_outage",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2025-10-17T05:00:00Z",
+      "resolved_at": "2025-10-17T07:00:00Z",
+      "duration_minutes": 120,
+      "affected_services": [
+        "payment-service",
+        "checkout-service"
+      ],
+      "symptoms": "Spike in payment authorization errors; checkout success rate dropped; provider returning 5xx / timeouts.",
+      "root_cause": "External payment provider (api.globalpay-gateway.com) regional degradation; upstream gateway latency > 10s.",
+      "remediation": "Failed over to secondary provider region; enabled payment retry queue; provider resolved within 90m.",
+      "prevention": "Add multi-provider failover; circuit-breaker around provider; synthetic provider health checks."
+    },
+    {
+      "incident_id": "INC-2025-028",
+      "title": "Memory leak caused recurring pod OOMKills",
+      "pattern": "memory_leak",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-10-12T16:00:00Z",
+      "resolved_at": "2025-10-12T17:30:00Z",
+      "duration_minutes": 90,
+      "affected_services": [
+        "order-service"
+      ],
+      "symptoms": "Heap usage climbs over days, GC pauses lengthen, pods OOMKilled and restart, sawtooth memory graph.",
+      "root_cause": "Unbounded in-memory cache / listener accumulation; objects never evicted.",
+      "remediation": "Rolling restart for relief; bounded cache size + eviction; heap dump analysis to find retention.",
+      "prevention": "Bounded caches with eviction; memory-leak canary (long-soak); alert on heap-after-GC trend."
+    },
+    {
+      "incident_id": "INC-2025-029",
+      "title": "Kafka consumer lag delayed inventory sync",
+      "pattern": "kafka_lag",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-10-08T21:00:00Z",
+      "resolved_at": "2025-10-08T22:10:00Z",
+      "duration_minutes": 70,
+      "affected_services": [
+        "inventory-service",
+        "order-service"
+      ],
+      "symptoms": "Growing consumer lag on inventory.sync; stale stock counts; delayed order state transitions.",
+      "root_cause": "Consumer throughput < produce rate after traffic growth; slow DB writes in consumer; frequent rebalances.",
+      "remediation": "Scaled consumer group, increased partitions, batched DB writes, tuned max.poll.records.",
+      "prevention": "Alert on consumer lag SLO; autoscale consumers on lag; idempotent + batched processing."
+    },
+    {
+      "incident_id": "INC-2025-030",
+      "title": "Intermittent payment failures traced to DNS resolution",
+      "pattern": "payment_dns",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-10-04T21:00:00Z",
+      "resolved_at": "2025-10-04T22:10:00Z",
+      "duration_minutes": 70,
+      "affected_services": [
+        "payment-service"
+      ],
+      "symptoms": "Sporadic UnknownHostException for api.globalpay-gateway.com; errors cleared on retry; no provider-side incident.",
+      "root_cause": "CoreDNS upstream resolver intermittently timing out; ndots/search-domain misconfig amplifying lookups.",
+      "remediation": "Increased CoreDNS cache TTL and replicas; added dnsConfig with reduced ndots; enabled NodeLocal DNSCache.",
+      "prevention": "NodeLocal DNSCache everywhere; alert on DNS lookup latency; pre-resolve provider host on startup."
+    },
+    {
+      "incident_id": "INC-2025-031",
+      "title": "Node resource contention degraded latency",
+      "pattern": "noisy_neighbor",
+      "severity": "SEV3",
+      "status": "resolved",
+      "detected_at": "2025-09-28T01:00:00Z",
+      "resolved_at": "2025-09-28T05:00:00Z",
+      "duration_minutes": 240,
+      "affected_services": [
+        "product-service"
+      ],
+      "symptoms": "Latency p99 rose on a subset of pods; CPU throttling metrics elevated; no error spike.",
+      "root_cause": "Co-located batch job saturated node CPU; missing CPU limits / anti-affinity.",
+      "remediation": "Evicted batch workload, set requests/limits, added anti-affinity.",
+      "prevention": "Right-size requests/limits; separate batch node pool; throttling alerts."
+    },
+    {
+      "incident_id": "INC-2025-032",
+      "title": "Database connection saturation under peak load",
+      "pattern": "db_saturation",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-09-16T12:00:00Z",
+      "resolved_at": "2025-09-16T12:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "checkout-service",
+        "order-service"
+      ],
+      "symptoms": "Rising query latency, connection wait timeouts, 'too many clients already' errors, error-rate climb.",
+      "root_cause": "Connection pool sized beyond DB max_connections during traffic peak; long-running queries holding connections.",
+      "remediation": "Reduced per-pod pool size, added PgBouncer, killed long-running queries, scaled read replicas.",
+      "prevention": "Capacity model pool_size*replicas < max_connections; PgBouncer in front of all PG; query timeouts."
+    },
+    {
+      "incident_id": "INC-2025-033",
+      "title": "Memory leak caused recurring pod OOMKills",
+      "pattern": "memory_leak",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-09-07T02:00:00Z",
+      "resolved_at": "2025-09-07T02:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "order-service"
+      ],
+      "symptoms": "Heap usage climbs over days, GC pauses lengthen, pods OOMKilled and restart, sawtooth memory graph.",
+      "root_cause": "Unbounded in-memory cache / listener accumulation; objects never evicted.",
+      "remediation": "Rolling restart for relief; bounded cache size + eviction; heap dump analysis to find retention.",
+      "prevention": "Bounded caches with eviction; memory-leak canary (long-soak); alert on heap-after-GC trend."
+    },
+    {
+      "incident_id": "INC-2025-034",
+      "title": "Intermittent payment failures traced to DNS resolution",
+      "pattern": "payment_dns",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-08-28T17:00:00Z",
+      "resolved_at": "2025-08-28T18:30:00Z",
+      "duration_minutes": 90,
+      "affected_services": [
+        "payment-service"
+      ],
+      "symptoms": "Sporadic UnknownHostException for api.globalpay-gateway.com; errors cleared on retry; no provider-side incident.",
+      "root_cause": "CoreDNS upstream resolver intermittently timing out; ndots/search-domain misconfig amplifying lookups.",
+      "remediation": "Increased CoreDNS cache TTL and replicas; added dnsConfig with reduced ndots; enabled NodeLocal DNSCache.",
+      "prevention": "NodeLocal DNSCache everywhere; alert on DNS lookup latency; pre-resolve provider host on startup."
+    },
+    {
+      "incident_id": "INC-2025-035",
+      "title": "Bad deployment config caused resource exhaustion",
+      "pattern": "misconfigured_deployment",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-08-18T20:00:00Z",
+      "resolved_at": "2025-08-18T22:00:00Z",
+      "duration_minutes": 120,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Error-rate spike immediately after deploy; resource timeouts; recovered on rollback.",
+      "root_cause": "Deployment shipped misconfigured pool/limit value; under-provisioned a shared resource.",
+      "remediation": "Rolled back to previous version; corrected config; re-deployed with canary.",
+      "prevention": "Config diff review gate; canary + automated rollback on error-rate SLO breach."
+    },
+    {
+      "incident_id": "INC-2025-036",
+      "title": "Database connection saturation under peak load",
+      "pattern": "db_saturation",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-08-07T18:00:00Z",
+      "resolved_at": "2025-08-07T19:10:00Z",
+      "duration_minutes": 70,
+      "affected_services": [
+        "checkout-service",
+        "order-service"
+      ],
+      "symptoms": "Rising query latency, connection wait timeouts, 'too many clients already' errors, error-rate climb.",
+      "root_cause": "Connection pool sized beyond DB max_connections during traffic peak; long-running queries holding connections.",
+      "remediation": "Reduced per-pod pool size, added PgBouncer, killed long-running queries, scaled read replicas.",
+      "prevention": "Capacity model pool_size*replicas < max_connections; PgBouncer in front of all PG; query timeouts."
+    },
+    {
+      "incident_id": "INC-2025-037",
+      "title": "Redis cluster failover spiked checkout latency",
+      "pattern": "redis_outage",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-07-31T14:00:00Z",
+      "resolved_at": "2025-07-31T18:00:00Z",
+      "duration_minutes": 240,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Cache connection errors, latency spike as calls fall back to DB, intermittent timeouts.",
+      "root_cause": "ElastiCache node failover; client pool exhausted / slow to reconnect; no graceful degradation.",
+      "remediation": "Client reconnect tuning, raised pool size, added cache-miss fallback with timeouts and bulkheads.",
+      "prevention": "Multi-AZ Redis with fast failover; client-side circuit breaker; degrade-gracefully on cache loss."
+    },
+    {
+      "incident_id": "INC-2025-038",
+      "title": "Database connection saturation under peak load",
+      "pattern": "db_saturation",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-07-19T16:00:00Z",
+      "resolved_at": "2025-07-19T16:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "checkout-service",
+        "order-service"
+      ],
+      "symptoms": "Rising query latency, connection wait timeouts, 'too many clients already' errors, error-rate climb.",
+      "root_cause": "Connection pool sized beyond DB max_connections during traffic peak; long-running queries holding connections.",
+      "remediation": "Reduced per-pod pool size, added PgBouncer, killed long-running queries, scaled read replicas.",
+      "prevention": "Capacity model pool_size*replicas < max_connections; PgBouncer in front of all PG; query timeouts."
+    },
+    {
+      "incident_id": "INC-2025-039",
+      "title": "Intermittent payment failures traced to DNS resolution",
+      "pattern": "payment_dns",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-07-09T20:00:00Z",
+      "resolved_at": "2025-07-09T21:10:00Z",
+      "duration_minutes": 70,
+      "affected_services": [
+        "payment-service"
+      ],
+      "symptoms": "Sporadic UnknownHostException for api.globalpay-gateway.com; errors cleared on retry; no provider-side incident.",
+      "root_cause": "CoreDNS upstream resolver intermittently timing out; ndots/search-domain misconfig amplifying lookups.",
+      "remediation": "Increased CoreDNS cache TTL and replicas; added dnsConfig with reduced ndots; enabled NodeLocal DNSCache.",
+      "prevention": "NodeLocal DNSCache everywhere; alert on DNS lookup latency; pre-resolve provider host on startup."
+    },
+    {
+      "incident_id": "INC-2025-040",
+      "title": "Memory leak caused recurring pod OOMKills",
+      "pattern": "memory_leak",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-06-30T10:00:00Z",
+      "resolved_at": "2025-06-30T12:00:00Z",
+      "duration_minutes": 120,
+      "affected_services": [
+        "order-service"
+      ],
+      "symptoms": "Heap usage climbs over days, GC pauses lengthen, pods OOMKilled and restart, sawtooth memory graph.",
+      "root_cause": "Unbounded in-memory cache / listener accumulation; objects never evicted.",
+      "remediation": "Rolling restart for relief; bounded cache size + eviction; heap dump analysis to find retention.",
+      "prevention": "Bounded caches with eviction; memory-leak canary (long-soak); alert on heap-after-GC trend."
+    },
+    {
+      "incident_id": "INC-2025-041",
+      "title": "Payment authorizations failing \u2014 external provider degraded",
+      "pattern": "payment_provider_outage",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2025-06-22T23:00:00Z",
+      "resolved_at": "2025-06-23T00:30:00Z",
+      "duration_minutes": 90,
+      "affected_services": [
+        "payment-service",
+        "checkout-service"
+      ],
+      "symptoms": "Spike in payment authorization errors; checkout success rate dropped; provider returning 5xx / timeouts.",
+      "root_cause": "External payment provider (api.globalpay-gateway.com) regional degradation; upstream gateway latency > 10s.",
+      "remediation": "Failed over to secondary provider region; enabled payment retry queue; provider resolved within 90m.",
+      "prevention": "Add multi-provider failover; circuit-breaker around provider; synthetic provider health checks."
+    },
+    {
+      "incident_id": "INC-2025-042",
+      "title": "Cache stampede after Redis eviction storm",
+      "pattern": "cache_stampede",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-06-17T19:00:00Z",
+      "resolved_at": "2025-06-17T22:00:00Z",
+      "duration_minutes": 180,
+      "affected_services": [
+        "product-service",
+        "checkout-service"
+      ],
+      "symptoms": "Sudden DB load spike, latency cliff, redis hit-rate collapse following mass key expiry.",
+      "root_cause": "Synchronized TTL expiry caused thundering herd to backend DB (no jitter, no request coalescing).",
+      "remediation": "Added TTL jitter, request coalescing (single-flight), pre-warmed hot keys.",
+      "prevention": "TTL jitter standard; single-flight on cache miss; soft-TTL with async refresh."
+    },
+    {
+      "incident_id": "INC-2025-043",
+      "title": "Database connection saturation under peak load",
+      "pattern": "db_saturation",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-06-13T12:00:00Z",
+      "resolved_at": "2025-06-13T12:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "checkout-service",
+        "order-service"
+      ],
+      "symptoms": "Rising query latency, connection wait timeouts, 'too many clients already' errors, error-rate climb.",
+      "root_cause": "Connection pool sized beyond DB max_connections during traffic peak; long-running queries holding connections.",
+      "remediation": "Reduced per-pod pool size, added PgBouncer, killed long-running queries, scaled read replicas.",
+      "prevention": "Capacity model pool_size*replicas < max_connections; PgBouncer in front of all PG; query timeouts."
+    },
+    {
+      "incident_id": "INC-2025-044",
+      "title": "Database connection saturation under peak load",
+      "pattern": "db_saturation",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-06-07T00:00:00Z",
+      "resolved_at": "2025-06-07T01:30:00Z",
+      "duration_minutes": 90,
+      "affected_services": [
+        "checkout-service",
+        "order-service"
+      ],
+      "symptoms": "Rising query latency, connection wait timeouts, 'too many clients already' errors, error-rate climb.",
+      "root_cause": "Connection pool sized beyond DB max_connections during traffic peak; long-running queries holding connections.",
+      "remediation": "Reduced per-pod pool size, added PgBouncer, killed long-running queries, scaled read replicas.",
+      "prevention": "Capacity model pool_size*replicas < max_connections; PgBouncer in front of all PG; query timeouts."
+    },
+    {
+      "incident_id": "INC-2025-045",
+      "title": "Payment authorizations failing \u2014 external provider degraded",
+      "pattern": "payment_provider_outage",
+      "severity": "SEV1",
+      "status": "resolved",
+      "detected_at": "2025-06-01T01:00:00Z",
+      "resolved_at": "2025-06-01T01:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "payment-service",
+        "checkout-service"
+      ],
+      "symptoms": "Spike in payment authorization errors; checkout success rate dropped; provider returning 5xx / timeouts.",
+      "root_cause": "External payment provider (api.globalpay-gateway.com) regional degradation; upstream gateway latency > 10s.",
+      "remediation": "Failed over to secondary provider region; enabled payment retry queue; provider resolved within 90m.",
+      "prevention": "Add multi-provider failover; circuit-breaker around provider; synthetic provider health checks."
+    },
+    {
+      "incident_id": "INC-2025-046",
+      "title": "TLS certificate expiration broke service-to-service calls",
+      "pattern": "cert_expiration",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-05-21T16:00:00Z",
+      "resolved_at": "2025-05-21T17:10:00Z",
+      "duration_minutes": 70,
+      "affected_services": [
+        "api-gateway",
+        "payment-service"
+      ],
+      "symptoms": "Sudden TLS handshake failures at a fixed timestamp; clients see certificate expired errors.",
+      "root_cause": "Internal mTLS / egress certificate expired; auto-renewal job had silently failed weeks earlier.",
+      "remediation": "Rotated certificate manually; restarted affected pods; fixed cert-manager renewal job.",
+      "prevention": "Alert at 21/14/7 days to expiry; monitor cert-manager renewal job; shorter-lived auto-rotated certs."
+    },
+    {
+      "incident_id": "INC-2025-047",
+      "title": "Cache stampede after Redis eviction storm",
+      "pattern": "cache_stampede",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-05-14T03:00:00Z",
+      "resolved_at": "2025-05-14T05:00:00Z",
+      "duration_minutes": 120,
+      "affected_services": [
+        "product-service",
+        "checkout-service"
+      ],
+      "symptoms": "Sudden DB load spike, latency cliff, redis hit-rate collapse following mass key expiry.",
+      "root_cause": "Synchronized TTL expiry caused thundering herd to backend DB (no jitter, no request coalescing).",
+      "remediation": "Added TTL jitter, request coalescing (single-flight), pre-warmed hot keys.",
+      "prevention": "TTL jitter standard; single-flight on cache miss; soft-TTL with async refresh."
+    },
+    {
+      "incident_id": "INC-2025-048",
+      "title": "Redis cluster failover spiked checkout latency",
+      "pattern": "redis_outage",
+      "severity": "SEV3",
+      "status": "resolved",
+      "detected_at": "2025-05-04T20:00:00Z",
+      "resolved_at": "2025-05-05T00:00:00Z",
+      "duration_minutes": 240,
+      "affected_services": [
+        "checkout-service"
+      ],
+      "symptoms": "Cache connection errors, latency spike as calls fall back to DB, intermittent timeouts.",
+      "root_cause": "ElastiCache node failover; client pool exhausted / slow to reconnect; no graceful degradation.",
+      "remediation": "Client reconnect tuning, raised pool size, added cache-miss fallback with timeouts and bulkheads.",
+      "prevention": "Multi-AZ Redis with fast failover; client-side circuit breaker; degrade-gracefully on cache loss."
+    },
+    {
+      "incident_id": "INC-2025-049",
+      "title": "Node resource contention degraded latency",
+      "pattern": "noisy_neighbor",
+      "severity": "SEV3",
+      "status": "resolved",
+      "detected_at": "2025-04-23T15:00:00Z",
+      "resolved_at": "2025-04-23T15:50:00Z",
+      "duration_minutes": 50,
+      "affected_services": [
+        "product-service"
+      ],
+      "symptoms": "Latency p99 rose on a subset of pods; CPU throttling metrics elevated; no error spike.",
+      "root_cause": "Co-located batch job saturated node CPU; missing CPU limits / anti-affinity.",
+      "remediation": "Evicted batch workload, set requests/limits, added anti-affinity.",
+      "prevention": "Right-size requests/limits; separate batch node pool; throttling alerts."
+    },
+    {
+      "incident_id": "INC-2025-050",
+      "title": "Kafka consumer lag delayed inventory sync",
+      "pattern": "kafka_lag",
+      "severity": "SEV2",
+      "status": "resolved",
+      "detected_at": "2025-04-11T23:00:00Z",
+      "resolved_at": "2025-04-11T23:35:00Z",
+      "duration_minutes": 35,
+      "affected_services": [
+        "inventory-service",
+        "order-service"
+      ],
+      "symptoms": "Growing consumer lag on inventory.sync; stale stock counts; delayed order state transitions.",
+      "root_cause": "Consumer throughput < produce rate after traffic growth; slow DB writes in consumer; frequent rebalances.",
+      "remediation": "Scaled consumer group, increased partitions, batched DB writes, tuned max.poll.records.",
+      "prevention": "Alert on consumer lag SLO; autoscale consumers on lag; idempotent + batched processing."
+    }
+  ]
+}

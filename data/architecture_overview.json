@@ -1,0 +1,213 @@
+{
+  "platform": "ShopFabric \u2014 e-commerce platform",
+  "description": "Customer-facing e-commerce platform serving ~18M monthly active users across web and mobile. Microservices on Kubernetes (EKS), event-driven via Kafka, polyglot persistence.",
+  "environment": "production",
+  "region_topology": [
+    "us-east-1 (primary)",
+    "us-west-2 (DR)"
+  ],
+  "generated_at": "2026-06-17T00:00:00Z",
+  "services": [
+    {
+      "name": "frontend",
+      "description": "Server-side-rendered web storefront and mobile BFF. Renders catalog, cart and checkout flows.",
+      "language": "TypeScript / Next.js",
+      "owner_team": "Storefront",
+      "owner_contact": "storefront-team@shopfabric.io",
+      "oncall_slack": "#oncall-storefront",
+      "tier": "edge",
+      "replicas": 24,
+      "depends_on": [
+        "api-gateway"
+      ],
+      "databases": [],
+      "caches": [
+        "CDN (Fastly)"
+      ],
+      "external_integrations": [
+        "Fastly CDN",
+        "Datadog RUM"
+      ]
+    },
+    {
+      "name": "api-gateway",
+      "description": "Edge API gateway: authN/Z, rate limiting, request routing, request fan-out aggregation.",
+      "language": "Go",
+      "owner_team": "Platform",
+      "owner_contact": "platform-team@shopfabric.io",
+      "oncall_slack": "#oncall-platform",
+      "tier": "edge",
+      "replicas": 18,
+      "depends_on": [
+        "checkout-service",
+        "product-service",
+        "order-service",
+        "user-service"
+      ],
+      "databases": [],
+      "caches": [
+        "redis-gateway (rate-limit counters)"
+      ],
+      "external_integrations": [
+        "Auth0 (JWKS)"
+      ]
+    },
+    {
+      "name": "checkout-service",
+      "description": "Orchestrates the checkout transaction: cart validation, stock reservation, payment authorization and order creation.",
+      "language": "Java / Spring Boot",
+      "owner_team": "Checkout",
+      "owner_contact": "checkout-team@shopfabric.io",
+      "oncall_slack": "#oncall-checkout",
+      "tier": "critical",
+      "replicas": 16,
+      "depends_on": [
+        "inventory-service",
+        "payment-service",
+        "order-service"
+      ],
+      "databases": [
+        "checkout-pg (PostgreSQL, transient cart state)"
+      ],
+      "caches": [
+        "redis-cart (cart + session cache)"
+      ],
+      "external_integrations": []
+    },
+    {
+      "name": "payment-service",
+      "description": "Handles payment authorization, capture and refunds. Wraps the external payment provider and tokenizes cards.",
+      "language": "Java / Spring Boot",
+      "owner_team": "Payments",
+      "owner_contact": "payments-team@shopfabric.io",
+      "oncall_slack": "#oncall-payments",
+      "tier": "critical",
+      "replicas": 14,
+      "depends_on": [],
+      "databases": [
+        "payments-pg (PostgreSQL, ledger + tokens)"
+      ],
+      "caches": [
+        "redis-payments (idempotency keys)"
+      ],
+      "external_integrations": [
+        "GlobalPay payment gateway (api.globalpay-gateway.com)",
+        "Sift fraud scoring"
+      ]
+    },
+    {
+      "name": "inventory-service",
+      "description": "Authoritative stock ledger. Reserves and releases stock; consumes order/fulfilment events from Kafka to keep counts accurate.",
+      "language": "Java / Spring Boot",
+      "owner_team": "Fulfilment",
+      "owner_contact": "fulfilment-team@shopfabric.io",
+      "oncall_slack": "#oncall-fulfilment",
+      "tier": "critical",
+      "replicas": 12,
+      "depends_on": [],
+      "databases": [
+        "inventory-pg (PostgreSQL, stock ledger)"
+      ],
+      "caches": [
+        "redis-inventory (hot SKU counts)"
+      ],
+      "external_integrations": [
+        "Kafka (topics: orders.created, fulfilment.shipped, inventory.sync)",
+        "WMS warehouse system (nightly batch)"
+      ]
+    },
+    {
+      "name": "product-service",
+      "description": "Product catalog, pricing and search facets. Read-heavy; backed by search index and read replicas.",
+      "language": "Go",
+      "owner_team": "Catalog",
+      "owner_contact": "catalog-team@shopfabric.io",
+      "oncall_slack": "#oncall-catalog",
+      "tier": "important",
+      "replicas": 20,
+      "depends_on": [
+        "inventory-service"
+      ],
+      "databases": [
+        "product-pg (PostgreSQL)",
+        "Elasticsearch (catalog index)"
+      ],
+      "caches": [
+        "redis-catalog (product detail cache)"
+      ],
+      "external_integrations": [
+        "Cloudinary (media)"
+      ]
+    },
+    {
+      "name": "order-service",
+      "description": "Order lifecycle and history. Persists orders, emits orders.created, drives state machine to fulfilment.",
+      "language": "Java / Spring Boot",
+      "owner_team": "Orders",
+      "owner_contact": "orders-team@shopfabric.io",
+      "oncall_slack": "#oncall-orders",
+      "tier": "critical",
+      "replicas": 14,
+      "depends_on": [
+        "notification-service"
+      ],
+      "databases": [
+        "orders-pg (PostgreSQL)"
+      ],
+      "caches": [],
+      "external_integrations": [
+        "Kafka (topics: orders.created, orders.updated)"
+      ]
+    },
+    {
+      "name": "notification-service",
+      "description": "Transactional email / SMS / push. Consumes events and fans out to providers.",
+      "language": "Node.js",
+      "owner_team": "Engagement",
+      "owner_contact": "engagement-team@shopfabric.io",
+      "oncall_slack": "#oncall-engagement",
+      "tier": "supporting",
+      "replicas": 8,
+      "depends_on": [],
+      "databases": [
+        "notifications-mongo (MongoDB, delivery log)"
+      ],
+      "caches": [],
+      "external_integrations": [
+        "SendGrid",
+        "Twilio",
+        "Firebase Cloud Messaging"
+      ]
+    },
+    {
+      "name": "user-service",
+      "description": "User profiles, addresses, preferences and entitlements. Source of truth for account data.",
+      "language": "Go",
+      "owner_team": "Accounts",
+      "owner_contact": "accounts-team@shopfabric.io",
+      "oncall_slack": "#oncall-accounts",
+      "tier": "important",
+      "replicas": 12,
+      "depends_on": [],
+      "databases": [
+        "users-pg (PostgreSQL)"
+      ],
+      "caches": [
+        "redis-users (profile cache)"
+      ],
+      "external_integrations": [
+        "Auth0 (identity)"
+      ]
+    }
+  ],
+  "shared_infrastructure": {
+    "orchestration": "Kubernetes (EKS) \u2014 namespaces per team",
+    "messaging": "Confluent Kafka (3 brokers, RF=3)",
+    "service_mesh": "Istio (mTLS, retries, circuit breaking)",
+    "databases": "Amazon RDS PostgreSQL (Multi-AZ), MongoDB Atlas, Elasticsearch",
+    "caching": "Amazon ElastiCache for Redis (per-domain clusters)",
+    "observability": "Datadog (metrics/APM), Loki (logs), OpenTelemetry tracing",
+    "dns": "Route53 + CoreDNS (in-cluster); external egress via NAT gateways",
+    "ci_cd": "Argo CD (GitOps), progressive rollouts via Argo Rollouts"
+  }
+}

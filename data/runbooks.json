@@ -1,0 +1,203 @@
+{
+  "description": "Operational runbooks for common failure modes.",
+  "runbooks": [
+    {
+      "id": "RB-001",
+      "title": "High latency / elevated p99",
+      "applies_to": [
+        "all services"
+      ],
+      "symptoms": [
+        "p95/p99 latency above SLO",
+        "Slow page loads / timeouts at edge",
+        "Latency rising without proportional error-rate change"
+      ],
+      "investigation_steps": [
+        "Confirm scope in metrics.json: which service(s), is latency the leading signal vs CPU/memory?",
+        "Check recent deployments.json for the affected service in the hours before onset.",
+        "Inspect logs.json for the service: GC pauses, cache timeouts, downstream call latency, pool waits.",
+        "Walk the dependency graph (service_dependencies.json) downstream to find the slowest hop.",
+        "Check cache hit-rate and DB connection wait \u2014 latency often shifts from cache to DB."
+      ],
+      "mitigation_steps": [
+        "If correlated with a deploy, roll back.",
+        "Scale out the bottleneck service; raise downstream timeouts/circuit-breaker thresholds.",
+        "Shed non-critical load; enable caching / increase TTL if cache-related."
+      ],
+      "escalation": "If customer-facing > 15m or revenue path affected, page service owner and declare SEV2; pull in Platform for shared infra."
+    },
+    {
+      "id": "RB-002",
+      "title": "Database connection exhaustion",
+      "applies_to": [
+        "checkout-service",
+        "payment-service",
+        "order-service",
+        "inventory-service",
+        "user-service",
+        "product-service"
+      ],
+      "symptoms": [
+        "'connection is not available' / 'timeout waiting for connection from pool'",
+        "PostgreSQL 'too many clients already' / 'remaining connection slots reserved'",
+        "Error-rate spike with latency spike; healthy DB CPU but maxed connections"
+      ],
+      "investigation_steps": [
+        "Grep logs.json for pool/connection timeout messages and the owning service.",
+        "Compare onset against deployments.json \u2014 did a deploy change pool sizing or datasource config?",
+        "Check pool_size * replica_count against the database max_connections.",
+        "Look for long-running / blocked queries holding connections."
+      ],
+      "mitigation_steps": [
+        "Roll back the offending deploy if pool config changed.",
+        "Right-size pool (pool_size * replicas < max_connections); restart pods to reset pools.",
+        "Introduce / front with PgBouncer; add statement + pool acquisition timeouts."
+      ],
+      "escalation": "Page DB on-call (Platform) if max_connections must be raised or replicas added; SEV2 if checkout/payment affected."
+    },
+    {
+      "id": "RB-003",
+      "title": "Payment failures",
+      "applies_to": [
+        "payment-service",
+        "checkout-service"
+      ],
+      "symptoms": [
+        "Authorization error-rate spike; checkout success-rate drop",
+        "Provider 5xx/timeouts, UnknownHostException, or pool/connection errors inside payment-service"
+      ],
+      "investigation_steps": [
+        "Distinguish external vs internal: provider 5xx/timeout (external) vs pool/DNS/config errors (internal).",
+        "Check deployments.json for a recent payment-service change (datasource, pool, client config).",
+        "Grep logs.json for provider host errors, DNS (UnknownHostException), and HikariPool timeouts.",
+        "Correlate error-rate in metrics.json with deploy time and DNS-lookup latency."
+      ],
+      "mitigation_steps": [
+        "If deploy-correlated, roll back payment-service.",
+        "If provider-side, fail over provider region / enable retry queue and circuit breaker.",
+        "If DNS, flush/scale CoreDNS, enable NodeLocal DNSCache, pre-resolve provider host."
+      ],
+      "escalation": "SEV1 if authorization broadly failing; page Payments on-call and notify Finance/Fraud."
+    },
+    {
+      "id": "RB-004",
+      "title": "Service crash loop / pod restarts",
+      "applies_to": [
+        "all services"
+      ],
+      "symptoms": [
+        "CrashLoopBackOff, repeated restarts, OOMKilled events",
+        "Memory sawtooth in metrics; 'OutOfMemoryError' or liveness-probe failures in logs"
+      ],
+      "investigation_steps": [
+        "Check restart cause: OOMKilled vs liveness failure vs panic (logs.json around restart time).",
+        "In metrics.json, look for memory climbing to the limit before each restart (leak) vs flat (config).",
+        "Correlate with deployments.json \u2014 did a deploy change heap/limits or introduce a cache/listener?",
+        "Capture a heap dump before the next restart for retention analysis."
+      ],
+      "mitigation_steps": [
+        "Rolling restart for immediate relief; raise memory limit as a stopgap only.",
+        "Roll back the deploy that changed memory behavior.",
+        "Bound caches / fix listener accumulation; add eviction."
+      ],
+      "escalation": "SEV2 if restarts affect a critical service's capacity; page owning team."
+    },
+    {
+      "id": "RB-005",
+      "title": "Kafka consumer lag",
+      "applies_to": [
+        "inventory-service",
+        "order-service",
+        "notification-service"
+      ],
+      "symptoms": [
+        "Growing consumer lag; stale data downstream (e.g. stock counts), delayed events",
+        "Frequent consumer group rebalances; processing throughput < produce rate"
+      ],
+      "investigation_steps": [
+        "Quantify lag per topic/partition over time in logs.json/metrics.json.",
+        "Identify the slow step in the consumer (DB writes, external calls, GC).",
+        "Check for rebalance storms (consumer restarts, session timeouts).",
+        "Assess downstream impact: in inventory's case, can lag permit overselling?"
+      ],
+      "mitigation_steps": [
+        "Scale the consumer group (<= partition count); add partitions if at ceiling.",
+        "Batch DB writes; tune max.poll.records / max.poll.interval.ms; make processing idempotent.",
+        "Temporarily gate risky actions (e.g. block sales of low-stock SKUs) until lag drains."
+      ],
+      "escalation": "SEV2 if lag risks data integrity (overselling / double-charge); page Fulfilment + Platform (Kafka)."
+    },
+    {
+      "id": "RB-006",
+      "title": "Memory leak",
+      "applies_to": [
+        "all services"
+      ],
+      "symptoms": [
+        "Heap-after-GC trends upward over hours/days; GC pause time grows; periodic OOMKill",
+        "Memory sawtooth correlated with restarts in metrics"
+      ],
+      "investigation_steps": [
+        "Confirm leak vs load: heap-after-GC rising independent of traffic = leak.",
+        "Pin the start to a deployment (new cache, listener, library) in deployments.json.",
+        "Take heap dumps at two points; diff dominator tree for growing retained sets."
+      ],
+      "mitigation_steps": [
+        "Rolling restarts on a schedule as a stopgap.",
+        "Roll back / patch the introducing change; bound the offending structure."
+      ],
+      "escalation": "SEV2 if capacity erodes faster than restarts can recover; involve owning team + Platform."
+    },
+    {
+      "id": "RB-007",
+      "title": "DNS resolution failures",
+      "applies_to": [
+        "all services",
+        "egress to external providers"
+      ],
+      "symptoms": [
+        "UnknownHostException / 'name or service not known'; intermittent and self-clearing",
+        "Elevated DNS lookup latency; errors not correlated with any provider incident"
+      ],
+      "investigation_steps": [
+        "Check whether failures are intermittent and clear on retry (DNS signature) vs sustained (provider).",
+        "Grep logs.json for UnknownHostException and DNS lookup latency warnings; note the hostname.",
+        "Check CoreDNS / NodeLocal DNSCache health and query latency; look for ndots-amplified lookups.",
+        "Confirm the target provider has no concurrent incident (rules out provider-side)."
+      ],
+      "mitigation_steps": [
+        "Scale CoreDNS; enable NodeLocal DNSCache; raise cache TTL.",
+        "Add pod dnsConfig (reduce ndots); pre-resolve / pin critical external hosts.",
+        "Add retry-with-backoff around resolution for critical egress."
+      ],
+      "escalation": "Page Platform (networking) if cluster-wide; SEV2 if it disrupts payment/critical egress."
+    },
+    {
+      "id": "RB-008",
+      "title": "Cache failures / Redis issues",
+      "applies_to": [
+        "checkout-service",
+        "product-service",
+        "inventory-service",
+        "user-service",
+        "api-gateway"
+      ],
+      "symptoms": [
+        "JedisConnectionException / 'could not get a resource from the pool' / cache GET timeouts",
+        "Latency spike as traffic falls back to DB; cache hit-rate collapse; possible stampede"
+      ],
+      "investigation_steps": [
+        "Identify the affected Redis cluster and owning service from logs.json.",
+        "Check for ElastiCache failover events and client reconnect storms.",
+        "Distinguish stampede (mass TTL expiry -> DB spike) from connectivity (pool exhaustion / timeouts).",
+        "Correlate cache-error onset with latency in metrics.json and any client-library deploy."
+      ],
+      "mitigation_steps": [
+        "Tune client reconnect + pool size; add cache-miss timeouts and bulkheads.",
+        "For stampede: TTL jitter, single-flight, pre-warm hot keys.",
+        "Degrade gracefully to DB with strict timeouts; circuit-break the cache if unhealthy."
+      ],
+      "escalation": "SEV2 if checkout latency breaches SLO; page owning team + Platform (ElastiCache)."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+# Internal Agent files
+GEMINI.md
+reply.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.env
+
+# MacOS
+.DS_Store
