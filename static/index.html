@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Production Incident Commander - Automated root cause analysis and remediation.">
+    <title>AI Incident Commander Dashboard</title>
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="glass-background"></div>
+    <main class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="logo-container">
+                <div class="pulse-indicator"></div>
+                <h1>AI Incident Commander</h1>
+            </div>
+            <p>ShopFabric SRE Orchestration</p>
+        </header>
+
+        <section class="alert-section">
+            <h2>Active PagerDuty Alerts</h2>
+            <div class="alert-card" id="alertCard">
+                <div class="alert-header">
+                    <span class="severity-badge">CRITICAL</span>
+                    <span class="timestamp">Just now</span>
+                </div>
+                <h3 class="alert-title">ALRT-0004: checkout-service Latency Spike</h3>
+                <p class="alert-desc">checkout-service latency has spiked and payment authorizations are failing. Investigate immediately.</p>
+                <button id="investigateBtn" class="primary-btn">Initialize Investigation</button>
+            </div>
+        </section>
+
+        <section class="investigation-section hidden" id="investigationSection">
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                    <span class="terminal-title">agent-execution-log</span>
+                </div>
+                <div class="terminal-body" id="terminalBody">
+                    <p class="log-line system-msg">> [SYSTEM] Booting AI SRE Agent...</p>
+                </div>
+            </div>
+
+            <div class="report-container hidden" id="reportContainer">
+                <h2>Generated Incident Report</h2>
+                <div class="markdown-body" id="markdownBody"></div>
+            </div>
+
+            <div class="remediation-container hidden" id="remediationContainer">
+                <h2>Auto-Remediation Sequence</h2>
+                <ul class="remediation-logs" id="remediationLogs"></ul>
+                <div class="success-banner hidden" id="successBanner">
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    Incident Resolved Successfully
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Marked.js for parsing markdown in the browser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>

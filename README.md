@@ -9,27 +9,46 @@ The agent operates against a simulated e-commerce microservices environment ("Sh
 
 We are documenting our development progress here step-by-step so reviewers can follow our thought process and implementation strategy.
 
-### [Phase 1: Project Setup & Discovery] - In Progress
+### [Phase 1: Project Setup & Discovery] - Completed
 - [x] Initialized the project directory.
 - [x] Analyzed the provided dataset (`architecture_overview.json`, `incidents.json`, etc.) to understand the ShopFabric topology and historical failure modes.
 - [x] Drafted initial project strategy and architecture for the AI Agent.
-- [ ] Initialize Git repository and `.gitignore`.
-- [ ] Set up Python virtual environment and `requirements.txt`.
+- [x] Initialize Git repository and `.gitignore`.
+- [x] Set up Python virtual environment and `requirements.txt`.
 
-### [Phase 2: Data Interface & Tool Creation] - Pending
-- [ ] Build a Python module to parse and load the JSON data files.
-- [ ] Create Python functions to query specific data (e.g., `search_logs(service_name, time_range)`, `get_service_dependencies(service)`).
-- [ ] Wrap these functions into LLM-compatible tools (using LangChain or direct function calling).
+### [Phase 2: Data Interface & Tool Creation] - Completed
+- [x] Build a Python module to parse and load the JSON data files.
+- [x] Create Python functions to query specific data (e.g., `search_logs(service_name, time_range)`, `get_service_dependencies(service)`).
+- [x] Wrap these functions into LLM-compatible tools (using LangChain or direct function calling).
 
-### [Phase 3: Agent Orchestration] - Pending
-- [ ] Define the System Prompt and Persona (Expert SRE / Incident Commander).
-- [ ] Implement the core agent loop using an LLM (OpenAI/Gemini).
-- [ ] Develop a CLI or simple interface to trigger the agent with a simulated alert.
+### [Phase 3: Agent Orchestration] - Completed
+- [x] Define the System Prompt and Persona (Expert SRE / Incident Commander).
+- [x] Implement the core agent loop using an LLM (OpenAI/Gemini).
+- [x] Develop a CLI or simple interface to trigger the agent with a simulated alert.
 
-### [Phase 4: Testing & Refinement] - Pending
-- [ ] Run the agent against a simulated active incident.
-- [ ] Evaluate the accuracy of the root cause analysis and remediation suggestions based on the provided data.
-- [ ] Refine prompts and tool logic to improve diagnostic accuracy.
+### [Phase 4: Testing & Refinement] - Completed
+- [x] Run the agent against a simulated active incident.
+- [x] Evaluate the accuracy of the root cause analysis and remediation suggestions based on the provided data.
+- [x] Refine prompts and tool logic to improve diagnostic accuracy.
 
-## How to Run (Placeholder)
-*(Instructions on how to execute the code will be added here once implementation is complete.)*
+## Setup & Execution
+
+### 1. Requirements
+Ensure you have Python 3.10+ installed. This project uses `gemini-2.5-pro` (the absolute state-of-the-art model) so you will need a `.env` file containing your `GEMINI_API_KEY`.
+
+### 2. Installation
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 3. Running the AI Incident Commander Dashboard
+To provide a premium experience, this project includes a **Web UI Dashboard** with an **Auto-Remediation Engine**.
+
+1. Start the FastAPI backend server:
+```bash
+python src/api.py
+```
+2. Open your browser and navigate to: [http://localhost:8000](http://localhost:8000)
+3. Click "Initialize Investigation" to watch the LangGraph agent in action and see the Auto-Remediator execute the recommended fixes!

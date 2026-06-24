@@ -13,3 +13,7 @@ pandas>=2.2.0
 # Vector DB (Optional, for storing incidents/runbooks if we decide to use RAG)
 chromadb>=0.4.24
 tiktoken>=0.6.0
+
+# Web Application
+fastapi>=0.110.0
+uvicorn>=0.29.0
