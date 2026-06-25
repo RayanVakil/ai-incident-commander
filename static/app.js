@@ -25,6 +25,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const incidentSelect = document.getElementById('incidentSelect');
+    if (incidentSelect) {
+        incidentSelect.addEventListener('change', () => {
+            // Reset UI when a new incident is selected
+            investigateBtn.disabled = false;
+            investigateBtn.textContent = 'Initialize Investigation';
+            investigationSection.classList.add('hidden');
+            reportContainer.classList.add('hidden');
+            remediationContainer.classList.add('hidden');
+            successBanner.classList.add('hidden');
+            terminalBody.innerHTML = '<p class="log-line system-msg">> [SYSTEM] Booting AI SRE Agent...</p>';
+            remediationLogs.innerHTML = '';
+        });
+    }
+
     investigateBtn.addEventListener('click', async () => {
         const incidentSelect = document.getElementById('incidentSelect');
         const alertMessage = incidentSelect ? incidentSelect.value : "checkout-service latency has spiked and payment authorizations are failing. Investigate immediately.";
