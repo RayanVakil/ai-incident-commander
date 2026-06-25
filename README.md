@@ -51,4 +51,5 @@ To provide a premium experience, this project includes a **Web UI Dashboard** wi
 python src/api.py
 ```
 2. Open your browser and navigate to: [http://localhost:8000](http://localhost:8000)
-3. Click "Initialize Investigation" to watch the LangGraph agent in action and see the Auto-Remediator execute the recommended fixes!
+3. Use the dropdown menu to select between the **3 distinct production incidents** (as requested in the challenge deliverables).
+4. Click "Initialize Investigation" to watch the LangGraph agent autonomously pull context from its tools, generate a Markdown report, and trigger the Auto-Remediator to simulate fixes!
