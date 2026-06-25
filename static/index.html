@@ -27,8 +27,14 @@
                     <span class="severity-badge">CRITICAL</span>
                     <span class="timestamp">Just now</span>
                 </div>
-                <h3 class="alert-title">ALRT-0004: checkout-service Latency Spike</h3>
-                <p class="alert-desc">checkout-service latency has spiked and payment authorizations are failing. Investigate immediately.</p>
+                <div class="incident-selector">
+                    <label for="incidentSelect">Select Simulated Incident:</label>
+                    <select id="incidentSelect" class="incident-dropdown">
+                        <option value="Payment latency increased by 300%. Determine what changed.">1. Payment latency increased by 300%</option>
+                        <option value="Inventory overselling occurred during a flash sale. Analyze the likely cause.">2. Inventory overselling occurred during a flash sale</option>
+                        <option value="Customer complaints regarding slow checkout have increased significantly over the last two hours. Investigate.">3. Customer complaints regarding slow checkout</option>
+                    </select>
+                </div>
                 <button id="investigateBtn" class="primary-btn">Initialize Investigation</button>
             </div>
         </section>

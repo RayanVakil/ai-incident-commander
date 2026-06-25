@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     investigateBtn.addEventListener('click', async () => {
+        const incidentSelect = document.getElementById('incidentSelect');
+        const alertMessage = incidentSelect ? incidentSelect.value : "checkout-service latency has spiked and payment authorizations are failing. Investigate immediately.";
+
         // UI updates
         investigateBtn.disabled = true;
         investigateBtn.textContent = 'Investigating...';
@@ -33,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Simulate initial agent thought process
         await simulateTypingLog("Initializing LangGraph ReAct Agent with Gemini 2.5 Pro...", 800);
-        await simulateTypingLog("Analyzing incoming PagerDuty alert: 'checkout-service latency has spiked...'", 1000);
+        await simulateTypingLog(`Analyzing incoming alert: '${alertMessage.substring(0, 40)}...'`, 1000);
         await simulateTypingLog("Invoking Tool: Get_Active_Alerts...", 1200);
         await simulateTypingLog("Invoking Tool: Get_Service_Architecture(checkout-service)...", 1000);
         await simulateTypingLog("Tracing dependency graph. Investigating payment-service...", 1500);
@@ -47,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    alert_message: "checkout-service latency has spiked and payment authorizations are failing. Investigate immediately."
+                    alert_message: alertMessage
                 })
             });
 
