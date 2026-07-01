@@ -55,9 +55,9 @@ Based on the alert, I am considering the following possible causes:
 
 ### Step 5: Search Historical Incidents
 **Tool Call**: `Search_Historical_Incidents("payment-service connection pool")`
-**Result**: Found 1 similar incident: `INC-2025-089` (Payment latency due to unclosed DB transactions).
+**Result**: Found 1 similar incident: `INC-2026-010` (Database connection saturation under peak load; long-running queries holding connections).
 
-**Analysis**: The historical incident matches our symptoms perfectly. A previous bug caused transactions to remain open, exhausting the pool.
+**Analysis**: The historical incident matches our symptoms perfectly. A previous issue with other services (checkout/order) caused transactions to remain open and exhaust the pool, confirming this known failure mode.
 
 ### Step 6: Consult Runbook
 **Tool Call**: `Get_Runbook("payment-service")`
