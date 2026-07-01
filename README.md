@@ -3,7 +3,7 @@
 ## Overview
 This repository contains the implementation of an AI-powered "Production Incident Commander." The goal of this agent is to assist Site Reliability Engineers (SREs) by automatically ingesting, analyzing, and synthesizing telemetry data (logs, metrics, alerts, and historical incidents) to diagnose production issues and recommend remediation steps.
 
-The agent operates against a simulated e-commerce microservices environment ("ShopFabric") and uses a large language model equipped with tools to query system state and historical context.
+The agent operates against a simulated e-commerce microservices environment ("ShopFabric") and uses **LangGraph's ReAct (Reason + Act)** framework. By exposing raw data abstractions as tools, the agent dynamically investigates alerts, forms hypotheses, gathers evidence from logs and metrics, and correlates data to pinpoint root causes, instead of relying on a predefined checklist.
 
 ## Project Status & Log
 

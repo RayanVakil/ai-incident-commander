@@ -16,13 +16,13 @@ load_dotenv()
 
 class IncidentCommanderAgent:
     """
-    AI Agent that acts as a Production Incident Commander.
-    It uses LangChain and Gemini to query system telemetry and historical data
-    to diagnose incidents and recommend remediation steps.
+    The IncidentCommanderAgent is a LangGraph-based ReAct agent designed to 
+    autonomously investigate production incidents. It uses tools to dynamically 
+    pull telemetry data, form hypotheses, and generate a final root cause report.
     """
     
     def __init__(self):
-        # 1. Initialize our data source
+        # 1. Initialize our data source (the abstraction over raw JSON files)
         self.data_loader = ShopFabricDataLoader()
         
         # 2. Define the LLM
@@ -36,17 +36,17 @@ class IncidentCommanderAgent:
             max_output_tokens=2048
         )
         
-        # 3. Create Tools for the Agent
+        # Define the tools available to the LLM for gathering evidence
         self.tools = [
             Tool(
                 name="Get_Service_Architecture",
                 func=self._tool_get_service_architecture,
-                description="Use this to look up a service's dependencies, owners, language, and tier. Input should be the exact service name (e.g., 'checkout-service')."
+                description="Input: service name (e.g. 'checkout-service'). Returns its dependencies, databases, and owner team."
             ),
             Tool(
                 name="Get_Active_Alerts",
                 func=self._tool_get_active_alerts,
-                description="Use this to check for active system alerts. Input can be 'CRITICAL' to filter, or 'ALL' to see all alerts."
+                description="Input: severity (e.g. 'CRITICAL' or 'ALL'). Returns active PagerDuty/Prometheus alerts."
             ),
             Tool(
                 name="Search_Historical_Incidents",

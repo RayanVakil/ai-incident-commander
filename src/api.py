@@ -22,16 +22,17 @@ class AlertRequest(BaseModel):
 @app.post("/api/investigate")
 def investigate_alert(request: AlertRequest):
     """
-    Takes an incoming alert, runs the LangGraph AI Agent to generate an 
-    Incident Report, and then triggers the Auto-Remediator to simulate fixes.
+    Endpoint that triggers the LangGraph ReAct agent to investigate an alert.
+    It returns both the final markdown report and the sequential thought process
+    of the agent (the tools it invoked and their results) for UI streaming.
     """
     try:
-        # 1. Run the AI Agent to get the Incident Report
+        # 1. Run the AI Agent to get the Incident Report and its thought process
         investigation_result = commander.investigate(request.alert_message)
         incident_report = investigation_result["report"]
         thought_process = investigation_result["thought_process"]
         
-        # 2. Run the Auto-Remediator to simulate execution based on the report
+        # 2. Pass the finalized report to the Auto-Remediator for automated action
         remediation_logs = remediator.execute_remediation(incident_report)
         
         return {

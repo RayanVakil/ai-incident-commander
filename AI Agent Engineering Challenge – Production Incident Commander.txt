@@ -1,0 +1,278 @@
+﻿AI Agent Engineering Challenge – Production Incident Commander
+Overview
+Modern production incidents require engineers to gather information from multiple systems, correlate evidence, form hypotheses, validate findings, and coordinate remediation efforts.
+The objective of this challenge is to build an AI-powered Incident Commander capable of investigating production incidents and generating evidence-based recommendations.
+This challenge is intended to evaluate:
+* Agent design
+* Planning and reasoning
+* Tool orchestration
+* Multi-step workflows
+* Context management
+* LLM utilization
+* Software engineering practices
+The focus is not UI development. The focus is on how the agent thinks, plans, investigates, and arrives at conclusions.
+________________
+
+
+Problem Statement
+You are responsible for operating a large e-commerce platform consisting of multiple microservices.
+Users are reporting issues such as:
+* Checkout failures
+* Slow page loads
+* Order processing delays
+* Payment failures
+* Inventory inconsistencies
+Your task is to build an AI Incident Commander that can investigate incidents and provide:
+* Root cause hypotheses
+* Supporting evidence
+* Impact assessment
+* Recommended remediation actions
+* Confidence score
+* Incident summary
+The assistant should behave like a senior Site Reliability Engineer (SRE) or Incident Commander investigating production issues.
+________________
+
+
+Dataset
+You will be provided with a folder containing operational data.
+Example:
+data/
+
+architecture_overview.json
+service_dependencies.json
+metrics.json
+logs.json
+deployments.json
+incidents.json
+postmortems.json
+runbooks.json
+alerts.json
+customer_reports.json
+The datasets simulate information available to production engineering teams.
+Some incidents may require correlating information across multiple datasets. The correct answer should not be obtainable from a single file.
+________________
+
+
+Tool Integration Requirement
+The provided datasets should not be loaded directly into a single LLM prompt.
+Your solution should expose them through a tool abstraction layer and allow the agent to retrieve information as needed during an investigation.
+Example interfaces:
+search_logs(service_name, query)
+
+get_service_metrics(service_name)
+
+get_recent_deployments(service_name)
+
+get_service_dependencies(service_name)
+
+search_past_incidents(query)
+
+get_runbook(service_name)
+
+get_alerts(service_name)
+
+search_customer_reports(query)
+You may implement the tool layer using:
+* MCP
+* Agent frameworks
+* Any equivalent mechanism
+The choice of technology is entirely up to you.
+The focus of the evaluation is not the framework used, but how effectively the agent plans investigations, gathers evidence, and arrives at conclusions.
+________________
+
+
+Example Incident Requests
+Example 1
+“Checkout success rate dropped from 95% to 40%. Investigate.”
+Example 2
+“Inventory overselling occurred during a flash sale. Analyze the likely cause.”
+Example 3
+“Payment latency increased by 300%. Determine what changed.”
+Example 4
+“Customer complaints regarding slow checkout have increased significantly over the last two hours. Investigate.”
+________________
+
+
+Expected Agent Behavior
+The assistant should not immediately provide an answer.
+Instead, it should:
+1. Form an investigation plan.
+2. Identify required information.
+3. Gather evidence using tools.
+4. Generate multiple competing hypotheses.
+5. Validate hypotheses using evidence.
+6. Eliminate unlikely causes.
+7. Correlate findings across systems.
+8. Generate conclusions and recommendations.
+Example workflow:
+Incident
+    ↓
+Plan Investigation
+    ↓
+Gather Metrics
+    ↓
+Review Alerts
+    ↓
+Review Deployments
+    ↓
+Analyze Logs
+    ↓
+Check Service Dependencies
+    ↓
+Search Historical Incidents
+    ↓
+Consult Runbooks
+    ↓
+Validate Hypotheses
+    ↓
+Generate Findings
+    ↓
+Recommend Actions
+________________
+
+
+Hypothesis-Driven Investigation
+A strong investigation should maintain multiple possible explanations until sufficient evidence is collected.
+Example:
+Hypothesis 1:
+Recent deployment introduced a regression.
+
+Hypothesis 2:
+External payment provider degradation.
+
+Hypothesis 3:
+Database connection pool exhaustion.
+
+Hypothesis 4:
+Redis failover causing latency.
+The agent should gather evidence to either strengthen or eliminate each hypothesis before arriving at a final conclusion.
+Jumping directly to a root cause without evidence is discouraged.
+________________
+
+
+Historical Knowledge Utilization
+The provided historical incidents, postmortems, and runbooks represent organizational knowledge accumulated from previous production issues.
+The assistant should leverage this information to:
+* Identify similar incidents
+* Recognize recurring patterns
+* Accelerate investigations
+* Validate potential root causes
+* Recommend proven mitigation strategies
+The agent should explain when historical incidents influenced its reasoning.
+________________
+
+
+Explainability Requirements
+All findings should include:
+* Supporting evidence
+* Relevant metrics
+* Relevant log excerpts
+* Related historical incidents (if applicable)
+* Confidence level
+* Reasoning summary
+Example:
+Root Cause:
+Payment Service connection pool exhaustion
+
+Confidence:
+88%
+
+Supporting Evidence:
+- Error rate increased immediately after deployment
+- Logs contain HikariPool timeout messages
+- Similar pattern found in historical incident INC-2025-0412
+
+Recommended Actions:
+- Roll back deployment
+- Restore previous pool configuration
+- Add pool saturation alerting
+________________
+
+
+Deliverables
+1. Working Prototype
+Any technology stack is acceptable.
+Examples include:
+* Python
+* FastAPI
+* Streamlit
+* OpenAI SDK
+* Claude SDK
+* LangGraph
+* CrewAI
+* Custom implementations
+________________
+
+
+2. Design Document
+Describe:
+* Agent architecture
+* Tool architecture
+* Planning strategy
+* Investigation workflow
+* Reasoning approach
+* Limitations
+The design document should explain why specific design decisions were made.
+________________
+
+
+3. Demonstration
+Demonstrate at least three incident investigations.
+For each investigation, show:
+* Investigation plan
+* Evidence gathered
+* Hypotheses considered
+* Final conclusion
+* Recommended actions
+________________
+
+
+Bonus Features
+Optional enhancements:
+* Planner / Executor architecture
+* Reflection or critique step
+* Human approval workflow
+* MCP integration
+* Memory across investigations
+* Multi-agent design
+* Incident timeline reconstruction
+* Root-cause confidence scoring
+________________
+
+
+Evaluation Criteria
+Category
+	Weight
+	Agent Design
+	20%
+	Investigation Strategy
+	20%
+	Tool Usage & Orchestration
+	20%
+	Hypothesis Generation & Validation
+	15%
+	Root Cause Analysis Quality
+	15%
+	Explainability & Evidence
+	10%
+	________________
+
+
+What We Are Looking For
+Strong solutions typically:
+* Plan before acting
+* Gather evidence incrementally
+* Use tools strategically
+* Maintain multiple hypotheses
+* Validate assumptions with evidence
+* Correlate information across datasets
+* Leverage historical incidents and runbooks
+* Explain reasoning clearly
+* Produce actionable recommendations
+Weak solutions typically:
+* Load all data into a single prompt
+* Jump directly to conclusions
+* Ignore contradictory evidence
+* Fail to explain reasoning
+* Rely on a single source of information
+We are less interested in UI polish and more interested in the quality of the investigation workflow, reasoning process, and agent behavior.

@@ -18,21 +18,23 @@ This architecture satisfies the requirement for the agent to maintain multiple c
 To satisfy the constraint that data must not be loaded into a single prompt, a bespoke `ShopFabricDataLoader` class was built to act as the abstraction layer over the raw JSON telemetry datasets. 
 
 These data loader methods are wrapped into LangChain `Tool` objects and provided to the agent:
-- `Get_Service_Architecture`: Queries `architecture_overview.json` and `service_dependencies.json`.
+- `Get_Service_Architecture`: Queries `architecture_overview.json` and `service_dependencies.json` to map out dependencies.
 - `Get_Active_Alerts`: Queries `alerts.json`.
-- `Get_Recent_Deployments`: Queries `deployments.json`.
-- `Search_Historical_Incidents`: Queries `incidents.json`, `postmortems.json`, and `runbooks.json`.
+- `Get_Recent_Deployments`: Queries `deployments.json` to check for recent code pushes.
+- `Search_Logs`: Queries `logs.json` for specific services and supports logical `OR` parsing (e.g. `error OR deadlock`) to simulate real logging backends like Splunk/Datadog.
+- `Get_Service_Metrics`: Queries `metrics.json` for CPU, memory, and latency metrics.
+- `Search_Customer_Reports`: Queries `customer_reports.json`.
+- `Get_Runbook` / `Get_Postmortems`: Pulls relevant documentation based on service or error patterns.
 
-This allows the agent to dynamically query the environment exactly like a human SRE would, pulling only the necessary context into its context window at any given time.
+This comprehensive tool suite allows the agent to dynamically query the environment exactly like a human SRE would, pulling only the necessary context into its context window on an on-demand basis.
 
 ## 3. Investigation Workflow & Planning Strategy
-The agent is explicitly instructed via its System Prompt to follow a strict diagnostic methodology:
-1. **Plan & Triage**: Read the incoming alert to identify the failing component.
-2. **Gather Alert Context**: Call `Get_Active_Alerts` to see if there are correlating failures across the stack.
-3. **Map Dependencies**: Call `Get_Service_Architecture` to understand upstream/downstream impact.
-4. **Rule out Regressions**: Call `Get_Recent_Deployments` to check if a bad code push caused the issue.
-5. **Leverage Organizational Knowledge**: Call `Search_Historical_Incidents` to see if this failure pattern is a known issue (e.g., connection pool exhaustion) and identify proven mitigation strategies.
-6. **Conclude**: Generate a final report detailing Root Cause, Confidence, Evidence, and Remediation.
+The agent is explicitly instructed via its System Prompt to follow a strict, dynamic diagnostic methodology rather than relying on predefined lookups:
+1. **Hypothesize**: Read the incoming alert to identify the failing component and form an initial theory.
+2. **Gather Evidence**: Dynamically invoke tools (`Get_Active_Alerts`, `Get_Service_Metrics`) to validate or invalidate the theory.
+3. **Correlate Data**: Map dependencies (`Get_Service_Architecture`) and cross-reference metrics with actual logs (`Search_Logs`).
+4. **Historical Context**: Pull `Search_Historical_Incidents` or `Get_Postmortems` to correlate current symptoms with known past failure modes.
+5. **Conclude**: Generate a final structured Markdown report detailing Root Cause, Confidence, Evidence, and Remediation.
 
 ## 4. Reasoning Approach
 The agent employs a **Hypothesis-Driven** reasoning approach. For example, if checkout is failing, it does not immediately assume the checkout-service is broken. It gathers evidence:
