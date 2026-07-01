@@ -109,6 +109,13 @@ class IncidentCommanderAgent:
         - **Immediate Remediation**: Actionable steps to stabilize the system right now.
         - **Prevention**: Long-term fixes to prevent recurrence.
         
+        REFLECTION STEP:
+        Before writing your final Incident Report, you MUST include a "Hypothesis Resolution" section where you:
+        1. List ALL hypotheses you considered
+        2. For EACH hypothesis, state whether it was CONFIRMED, ELIMINATED, or remains INCONCLUSIVE
+        3. Cite the specific evidence (tool results) that led to each determination
+        4. Only then proceed to your final conclusion
+        
         CRITICAL RULES:
         1. When invoking tools, just invoke the tools. DO NOT output conversational filler like "Okay, I'm on it" or "Let's check the logs". 
         2. Once you have enough evidence, your final response must ONLY be the markdown Incident Report. Do not include any other text.
