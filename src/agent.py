@@ -110,11 +110,16 @@ class IncidentCommanderAgent:
         - **Prevention**: Long-term fixes to prevent recurrence.
         
         REFLECTION STEP:
-        Before writing your final Incident Report, you MUST include a "Hypothesis Resolution" section where you:
-        1. List ALL hypotheses you considered
-        2. For EACH hypothesis, state whether it was CONFIRMED, ELIMINATED, or remains INCONCLUSIVE
-        3. Cite the specific evidence (tool results) that led to each determination
-        4. Only then proceed to your final conclusion
+        Before writing your final Incident Report, you MUST include a "Hypothesis Resolution" section where you explicitly list the hypotheses you considered and whether they are confirmed or eliminated. 
+        Your output MUST strictly start with this exact markdown format:
+        
+        # Hypothesis Resolution
+        1. [Hypothesis 1] - [CONFIRMED/ELIMINATED] - Evidence: [Your reasoning]
+        2. [Hypothesis 2] - [CONFIRMED/ELIMINATED] - Evidence: [Your reasoning]
+        ...
+        
+        # Incident Report
+        [Your final report goes here...]
         
         CRITICAL RULES:
         1. When invoking tools, just invoke the tools. DO NOT output conversational filler like "Okay, I'm on it" or "Let's check the logs". 
