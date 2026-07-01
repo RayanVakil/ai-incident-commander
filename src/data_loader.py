@@ -95,14 +95,14 @@ class ShopFabricDataLoader:
         """Search recent customer reports for keywords (e.g., 'checkout', 'payment')."""
         results = []
         for report in self.customer_reports.get('reports', []):
-            if not query or query.lower() in report.get('description', '').lower() or query.lower() in report.get('category', '').lower():
+            if not query or query.lower() in report.get('message', '').lower() or query.lower() in ' '.join(report.get('tags', [])).lower():
                 results.append(report)
         return results[-10:] if len(results) > 10 else results
 
     def get_runbook(self, service_name: str) -> Dict[str, Any]:
         """Retrieve the runbook (troubleshooting steps) for a specific service."""
         for runbook in self.runbooks.get('runbooks', []):
-            if runbook.get('service') == service_name:
+            if service_name in runbook.get('applies_to', []):
                 return runbook
         return {"error": f"No runbook found for {service_name}"}
 
@@ -116,7 +116,7 @@ class ShopFabricDataLoader:
 
     def get_service_dependencies(self, service_name: str) -> Dict[str, Any]:
         """Retrieve upstream and downstream dependencies for a service."""
-        for dep in self.service_dependencies.get('dependencies', []):
+        for dep in self.service_dependencies.get('services', []):
             if dep.get('service') == service_name:
                 return dep
         return {"error": f"No dependencies found for {service_name}"}

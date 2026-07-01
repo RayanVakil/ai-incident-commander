@@ -147,7 +147,7 @@ class IncidentCommanderAgent:
             service = params.get("service", "")
             q = params.get("query", "")
             return json.dumps(self.data_loader.search_logs(service, q), indent=2)
-        except:
+        except (json.JSONDecodeError, Exception) as e:
             # Fallback if the LLM doesn't pass JSON
             return json.dumps(self.data_loader.search_logs(query.strip()), indent=2)
 
