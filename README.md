@@ -31,6 +31,11 @@ We are documenting our development progress here step-by-step so reviewers can f
 - [x] Evaluate the accuracy of the root cause analysis and remediation suggestions based on the provided data.
 - [x] Refine prompts and tool logic to improve diagnostic accuracy.
 
+### [Phase 5: Director Feedback & Refactoring] - Completed
+- [x] Re-architected system prompt to enforce strict, visible **Hypothesis Resolution** before conclusions.
+- [x] Eliminated all fabricated data and static lookups; agent now dynamically correlates real metrics, logs, and historical postmortems.
+- [x] Enhanced **Auto-Remediator** to dynamically extract target services from the AI's unstructured text rather than relying on brittle fallbacks.
+
 ## Setup & Execution
 
 ### 1. Requirements
