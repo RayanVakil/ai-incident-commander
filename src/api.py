@@ -27,7 +27,9 @@ def investigate_alert(request: AlertRequest):
     """
     try:
         # 1. Run the AI Agent to get the Incident Report
-        incident_report = commander.investigate(request.alert_message)
+        investigation_result = commander.investigate(request.alert_message)
+        incident_report = investigation_result["report"]
+        thought_process = investigation_result["thought_process"]
         
         # 2. Run the Auto-Remediator to simulate execution based on the report
         remediation_logs = remediator.execute_remediation(incident_report)
@@ -35,6 +37,7 @@ def investigate_alert(request: AlertRequest):
         return {
             "status": "success",
             "report": incident_report,
+            "thought_process": thought_process,
             "remediation_logs": remediation_logs
         }
     except Exception as e:

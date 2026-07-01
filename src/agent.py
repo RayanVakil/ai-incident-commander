@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.tools import Tool
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, AIMessage, ToolMessage
 from langgraph.prebuilt import create_react_agent
 
 # Import our custom data loader
@@ -25,8 +25,7 @@ class IncidentCommanderAgent:
         # 1. Initialize our data source
         self.data_loader = ShopFabricDataLoader()
         
-        # 2. Define the LLM (Gemini 1.5 Pro or similar available via the API key)
-        # Make sure you have set GEMINI_API_KEY in your .env file
+        # 2. Define the LLM
         api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
             raise ValueError("GEMINI_API_KEY not found in environment variables. Please check your .env file.")
@@ -38,7 +37,6 @@ class IncidentCommanderAgent:
         )
         
         # 3. Create Tools for the Agent
-        # These tools wrap our Python functions so the LLM knows how and when to call them.
         self.tools = [
             Tool(
                 name="Get_Service_Architecture",
@@ -59,6 +57,36 @@ class IncidentCommanderAgent:
                 name="Get_Recent_Deployments",
                 func=self._tool_get_recent_deployments,
                 description="Use this to check if a recent code deployment might have caused the issue. Input should be the service name."
+            ),
+            Tool(
+                name="Get_Service_Metrics",
+                func=self._tool_get_service_metrics,
+                description="Use this to retrieve performance and health metrics for a specific service. Input should be the service name."
+            ),
+            Tool(
+                name="Search_Logs",
+                func=self._tool_search_logs,
+                description="Use this to search logs for a specific service. Input should be a JSON string like {\"service\": \"checkout-service\", \"query\": \"error\"}."
+            ),
+            Tool(
+                name="Search_Customer_Reports",
+                func=self._tool_search_customer_reports,
+                description="Use this to search recent customer reports for keywords. Input should be the keyword (e.g., 'checkout')."
+            ),
+            Tool(
+                name="Get_Runbook",
+                func=self._tool_get_runbook,
+                description="Use this to retrieve the runbook (troubleshooting steps) for a specific service. Input should be the service name."
+            ),
+            Tool(
+                name="Get_Postmortems",
+                func=self._tool_get_postmortems,
+                description="Use this to search past postmortems for lessons learned. Input should be a query string."
+            ),
+            Tool(
+                name="Get_Service_Dependencies",
+                func=self._tool_get_service_dependencies,
+                description="Use this to retrieve upstream and downstream dependencies for a service. Input should be the service name."
             )
         ]
         
@@ -67,17 +95,24 @@ class IncidentCommanderAgent:
         You are an Expert Site Reliability Engineer (SRE) and Production Incident Commander for the ShopFabric e-commerce platform.
         Your goal is to rapidly diagnose production incidents, identify the root cause, and propose remediation steps.
         
-        Always follow this process:
-        1. Check active alerts to see what is failing.
-        2. Look up the architecture of the failing service to understand its dependencies.
-        3. Check recent deployments to rule out bad code pushes.
-        4. Search historical incidents to see if this is a known failure pattern.
+        CRITICAL INVESTIGATION WORKFLOW:
+        You must investigate dynamically instead of relying on a predefined checklist. 
+        - The investigation MUST be hypothesis-driven. Form multiple possible causes initially.
+        - Actively validate or eliminate your hypotheses by retrieving evidence across multiple datasets (metrics, logs, alerts, deployments, customer reports).
+        - Correlate information across these data sources to find the true root cause. Do not rely on a single source of truth.
+        - Leverage historical incidents and runbooks to inform your reasoning and recommendations.
         
         Provide a structured Incident Report at the end containing:
         - **Incident Summary**: What is happening and the business impact.
-        - **Root Cause**: What technical component failed.
-        - **Immediate Remediation**: Steps to stabilize the system right now.
+        - **Root Cause**: What technical component failed, with a Confidence Score (e.g., 95%).
+        - **Supporting Evidence**: Explicitly list the metrics, logs, or correlations that prove your hypothesis.
+        - **Immediate Remediation**: Actionable steps to stabilize the system right now.
         - **Prevention**: Long-term fixes to prevent recurrence.
+        
+        CRITICAL RULES:
+        1. When invoking tools, just invoke the tools. DO NOT output conversational filler like "Okay, I'm on it" or "Let's check the logs". 
+        2. Once you have enough evidence, your final response must ONLY be the markdown Incident Report. Do not include any other text.
+        3. Search tools only support SIMPLE substring matches or basic ' OR ' logic. Do NOT use complex boolean queries.
         """
         
         # Initialize the LangGraph Agent (the modern LangChain v0.3 standard)
@@ -88,49 +123,100 @@ class IncidentCommanderAgent:
         )
 
     # --- Tool Wrapper Functions ---
-    # These functions parse the LLM's string input and return a string output
-    
     def _tool_get_service_architecture(self, query: str) -> str:
-        service_name = query.strip()
-        data = self.data_loader.get_service_architecture(service_name)
-        return json.dumps(data, indent=2)
+        return json.dumps(self.data_loader.get_service_architecture(query.strip()), indent=2)
         
     def _tool_get_active_alerts(self, query: str) -> str:
         severity = query.strip().upper()
         if severity == 'ALL' or severity == '':
             severity = None
-        data = self.data_loader.get_active_alerts(severity)
-        return json.dumps(data, indent=2)
+        return json.dumps(self.data_loader.get_active_alerts(severity), indent=2)
         
     def _tool_search_historical_incidents(self, query: str) -> str:
-        pattern = query.strip()
-        data = self.data_loader.search_historical_incidents(pattern)
-        # Limit to top 3 to avoid exceeding token limits
-        return json.dumps(data[:3], indent=2)
+        return json.dumps(self.data_loader.search_historical_incidents(query.strip())[:3], indent=2)
         
     def _tool_get_recent_deployments(self, query: str) -> str:
-        service_name = query.strip()
-        data = self.data_loader.get_recent_deployments(service_name)
-        return json.dumps(data, indent=2)
+        return json.dumps(self.data_loader.get_recent_deployments(query.strip()), indent=2)
+
+    def _tool_get_service_metrics(self, query: str) -> str:
+        return json.dumps(self.data_loader.get_service_metrics(query.strip()), indent=2)
+
+    def _tool_search_logs(self, query: str) -> str:
+        try:
+            params = json.loads(query)
+            service = params.get("service", "")
+            q = params.get("query", "")
+            return json.dumps(self.data_loader.search_logs(service, q), indent=2)
+        except:
+            # Fallback if the LLM doesn't pass JSON
+            return json.dumps(self.data_loader.search_logs(query.strip()), indent=2)
+
+    def _tool_search_customer_reports(self, query: str) -> str:
+        return json.dumps(self.data_loader.search_customer_reports(query.strip()), indent=2)
+
+    def _tool_get_runbook(self, query: str) -> str:
+        return json.dumps(self.data_loader.get_runbook(query.strip()), indent=2)
+
+    def _tool_get_postmortems(self, query: str) -> str:
+        return json.dumps(self.data_loader.get_postmortems(query.strip()), indent=2)
+
+    def _tool_get_service_dependencies(self, query: str) -> str:
+        return json.dumps(self.data_loader.get_service_dependencies(query.strip()), indent=2)
 
     # --- Main Execution Loop ---
     
     def investigate(self, alert_message: str):
-        """Triggers the agent to investigate an alert."""
+        """Triggers the agent to investigate an alert and captures its thought process."""
         print(f"\n[INCIDENT COMMANDER ACTIVATED] Investigating alert: {alert_message}\n")
-        response = self.agent_executor.invoke({"messages": [("user", alert_message)]})
-        raw_content = response["messages"][-1].content
-        if isinstance(raw_content, list):
-            report = "\n".join(block.get("text", "") for block in raw_content if block.get("type") == "text")
-        else:
-            report = raw_content
+        
+        # We will capture the stream to get intermediate steps (Tool calls and Tool responses)
+        thought_process = []
+        final_report = ""
+
+        # Using stream to capture intermediate events
+        events = self.agent_executor.stream({"messages": [("user", alert_message)]}, stream_mode="values")
+        
+        for event in events:
+            messages = event.get("messages", [])
+            if not messages:
+                continue
             
-        print(report)
-        return report
+            last_message = messages[-1]
+            
+            # If the agent is calling tools
+            if isinstance(last_message, AIMessage) and last_message.tool_calls:
+                for tc in last_message.tool_calls:
+                    tool_name = tc.get("name")
+                    tool_args = tc.get("args")
+                    thought_process.append(f"AGENT ACTION: Invoking '{tool_name}' with arguments: {tool_args}")
+                    
+            # If a tool is returning results
+            elif isinstance(last_message, ToolMessage):
+                # Truncate long responses for UI readability
+                content = last_message.content
+                if len(content) > 500:
+                    content = content[:500] + "... [truncated]"
+                thought_process.append(f"TOOL RESULT ({last_message.name}): {content}")
+                
+            # If it's a final text response (and not just empty text alongside a tool call)
+            if isinstance(last_message, AIMessage) and last_message.content and not last_message.tool_calls:
+                raw_content = last_message.content
+                if isinstance(raw_content, list):
+                    final_report = "\n".join(block.get("text", "") for block in raw_content if block.get("type") == "text")
+                else:
+                    final_report = raw_content
+
+        print(final_report)
+        return {
+            "report": final_report,
+            "thought_process": thought_process
+        }
 
 # Test execution (will only run if this script is executed directly)
 if __name__ == "__main__":
     commander = IncidentCommanderAgent()
-    # Simulate an incoming PagerDuty alert
-    simulated_alert = "PagerDuty Alert: checkout-service latency has spiked and payment authorizations are failing. Investigate immediately."
-    commander.investigate(simulated_alert)
+    simulated_alert = "Checkout success rate dropped from 95% to 40%. Investigate."
+    result = commander.investigate(simulated_alert)
+    print("\n--- Thought Process ---")
+    for step in result["thought_process"]:
+        print(step)

@@ -49,13 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         investigateBtn.textContent = 'Investigating...';
         investigationSection.classList.remove('hidden');
         
-        // Simulate initial agent thought process
+        // Initial connection message
         await simulateTypingLog("Initializing LangGraph ReAct Agent with Gemini 2.5 Pro...", 800);
-        await simulateTypingLog(`Analyzing incoming alert: '${alertMessage.substring(0, 40)}...'`, 1000);
-        await simulateTypingLog("Invoking Tool: Get_Active_Alerts...", 1200);
-        await simulateTypingLog("Invoking Tool: Get_Service_Architecture(checkout-service)...", 1000);
-        await simulateTypingLog("Tracing dependency graph. Investigating payment-service...", 1500);
-        await simulateTypingLog("Synthesizing final Incident Report...", 1000);
+        await simulateTypingLog(`Analyzing incoming alert: '${alertMessage.substring(0, 40)}...'`, 500);
+        await simulateTypingLog("Agent is actively gathering evidence and forming hypotheses (this may take 15-30s)...", 0);
 
         try {
             // Actual API Call to backend
@@ -72,7 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (data.status === 'success') {
-                appendTerminalLog("[SYSTEM] Incident Report generated successfully.");
+                // Play back the actual thought process from the backend
+                if (data.thought_process && data.thought_process.length > 0) {
+                    for (const step of data.thought_process) {
+                        let type = step.startsWith("AGENT ACTION") ? 'agent-msg' : 'system-msg';
+                        appendTerminalLog(step, type);
+                        await new Promise(r => setTimeout(r, 600)); // slightly delay for visual effect
+                    }
+                }
+                appendTerminalLog("[SYSTEM] Incident Report generated successfully.", 'system-msg');
                 
                 // Render Markdown Report
                 reportContainer.classList.remove('hidden');
