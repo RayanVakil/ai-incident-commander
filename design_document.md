@@ -41,7 +41,8 @@ The agent is explicitly instructed via its System Prompt to follow a strict, dyn
 2. **Gather Evidence**: Dynamically invoke tools (`Get_Active_Alerts`, `Get_Service_Metrics`) to validate or invalidate the theory.
 3. **Correlate Data**: Map dependencies (`Get_Service_Architecture`) and cross-reference metrics with actual logs (`Search_Logs`).
 4. **Historical Context**: Pull `Search_Historical_Incidents` or `Get_Postmortems` to correlate current symptoms with known past failure modes.
-5. **Conclude**: Generate a final structured Markdown report detailing Root Cause, Confidence, Evidence, and Remediation.
+5. **Hypothesis Resolution**: Explicitly list all considered hypotheses, state whether they were confirmed or eliminated, and cite the exact evidence used to make that determination.
+6. **Conclude**: Generate a final structured Markdown report detailing Root Cause, Confidence, Evidence, and Remediation.
 
 ## 5. Reasoning Approach
 The agent employs a **Hypothesis-Driven** reasoning approach. For example, if checkout is failing, it does not immediately assume the checkout-service is broken. It gathers evidence:
@@ -53,7 +54,7 @@ By pulling historical postmortems, the agent can correlate symptoms (e.g., `Hika
 
 ## 6. Automated Remediation Engine (Bonus Feature)
 As a "Bonus Feature", this project includes an **Auto-Remediator** module. Once the LangGraph agent produces its Markdown-formatted diagnosis, the Auto-Remediator parses the report for specific, actionable Kubernetes mitigation steps. 
-It simulates executing `kubectl` commands (like scaling up deployments or patching config maps) to close the loop on the incident entirely autonomously.
+It dynamically extracts the name of the failing service from the AI's unstructured text and simulates executing `kubectl` commands (like scaling up deployments or patching config maps) against that specific service to close the loop on the incident entirely autonomously.
 
 ## 7. Limitations
 - **Read-Only Telemetry**: Currently, the abstraction layer is built over static JSON files. In a true production environment, these tools would be swapped out with API calls to Datadog, PagerDuty, and Kubernetes.
