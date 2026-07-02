@@ -22,8 +22,6 @@ A significant trade-off was deciding whether to load the static JSON into memory
 - **The trade-off:** Keyword search lacks semantic understanding (e.g., matching "sluggish" to "latency"). In a true production environment scaling to gigabytes of telemetry, pushing logs and runbooks to a Vector DB or directly querying Elasticsearch/Splunk via APIs would be strictly necessary.
 
 ## 3. Tool Architecture
-To satisfy the constraint that data must not be loaded into a single prompt, a bespoke `ShopFabricDataLoader` class was built to act as the abstraction layer over the raw JSON telemetry datasets. 
-
 These data loader methods are wrapped into LangChain `Tool` objects and provided to the agent:
 - `Get_Service_Architecture`: Queries `architecture_overview.json` and `service_dependencies.json` to map out dependencies.
 - `Get_Active_Alerts`: Queries `alerts.json`.
