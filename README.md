@@ -35,6 +35,7 @@ We are documenting our development progress here step-by-step so reviewers can f
 - [x] Re-architected system prompt to enforce strict, visible **Hypothesis Resolution** before conclusions.
 - [x] Eliminated all fabricated data and static lookups; agent now dynamically correlates real metrics, logs, and historical postmortems.
 - [x] Enhanced **Auto-Remediator** to dynamically extract target services from the AI's unstructured text rather than relying on brittle fallbacks.
+- [x] **Model Context Protocol (MCP)**: Decoupled the tool architecture by implementing a standalone `FastMCP` server, creating a highly modular and secure client-server abstraction layer for all telemetry data.
 
 ## Setup & Execution
 

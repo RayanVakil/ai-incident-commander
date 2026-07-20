@@ -21,8 +21,10 @@ A significant trade-off was deciding whether to load the static JSON into memory
 - **The decision:** For the scope of this simulation (~5.5MB of logs), loading the data into memory and using Python-based keyword search (with boolean OR logic) was chosen for simplicity, determinism, and speed. 
 - **The trade-off:** Keyword search lacks semantic understanding (e.g., matching "sluggish" to "latency"). In a true production environment scaling to gigabytes of telemetry, pushing logs and runbooks to a Vector DB or directly querying Elasticsearch/Splunk via APIs would be strictly necessary.
 
-## 3. Tool Architecture
-These data loader methods are wrapped into LangChain `Tool` objects and provided to the agent:
+## 3. Tool Architecture & Model Context Protocol (MCP)
+To build a highly decoupled, scalable system, the data access layer was implemented using the **Model Context Protocol (MCP)** via a standalone `FastMCP` server. Instead of coupling data loaders directly into the agent's logic, the MCP server securely exposes telemetry APIs over `stdio`. The LangGraph agent acts as an MCP client, dynamically discovering and converting these schemas into LangChain `Tool` objects on initialization.
+
+The MCP server exposes the following capabilities:
 - `Get_Service_Architecture`: Queries `architecture_overview.json` and `service_dependencies.json` to map out dependencies.
 - `Get_Active_Alerts`: Queries `alerts.json`.
 - `Get_Recent_Deployments`: Queries `deployments.json` to check for recent code pushes.
