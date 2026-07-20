@@ -20,7 +20,7 @@ class AlertRequest(BaseModel):
     alert_message: str
 
 @app.post("/api/investigate")
-def investigate_alert(request: AlertRequest):
+async def investigate_alert(request: AlertRequest):
     """
     Endpoint that triggers the LangGraph ReAct agent to investigate an alert.
     It returns both the final markdown report and the sequential thought process
@@ -28,7 +28,7 @@ def investigate_alert(request: AlertRequest):
     """
     try:
         # 1. Run the AI Agent to get the Incident Report and its thought process
-        investigation_result = commander.investigate(request.alert_message)
+        investigation_result = await commander.investigate(request.alert_message)
         incident_report = investigation_result["report"]
         thought_process = investigation_result["thought_process"]
         
