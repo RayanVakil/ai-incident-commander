@@ -56,6 +56,6 @@ By pulling historical postmortems, the agent can correlate symptoms (e.g., `Hika
 As a "Bonus Feature", this project includes an **Auto-Remediator** module. Once the LangGraph agent produces its Markdown-formatted diagnosis, the Auto-Remediator parses the report for specific, actionable Kubernetes mitigation steps. 
 It dynamically extracts the name of the failing service from the AI's unstructured text and simulates executing `kubectl` commands (like scaling up deployments or patching config maps) against that specific service to close the loop on the incident entirely autonomously.
 
-## 7. Limitations
-- **Read-Only Telemetry**: Currently, the abstraction layer is built over static JSON files. In a true production environment, these tools would be swapped out with API calls to Datadog, PagerDuty, and Kubernetes.
-- **Synchronous Execution**: The agent investigates sequentially. A future enhancement could utilize a multi-agent architecture where a "Triage Agent" delegates log scraping to parallel worker subagents to speed up the investigation.
+## 7. Limitations & Future Work
+- **Read-Only Telemetry**: Currently, the MCP server exposes static JSON files. In a true production environment, the MCP tools would be swapped to hit live APIs (Datadog, PagerDuty, Splunk, Kubernetes) — the decoupled MCP architecture makes this a drop-in replacement with zero changes to the agent client.
+- **Single-Agent Architecture**: While the agent now runs fully asynchronously via `asyncio`, it still operates as a single reasoning loop. A future enhancement could utilize a multi-agent architecture where a "Triage Agent" delegates log scraping to parallel MCP-connected worker subagents.

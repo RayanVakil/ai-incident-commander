@@ -3,6 +3,7 @@ import json
 import asyncio
 from dotenv import load_dotenv
 from typing import List, Dict, Any
+from pydantic import create_model, Field
 
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.tools import StructuredTool
@@ -98,22 +99,37 @@ class IncidentCommanderAgent:
                     
                     langchain_tools = []
                     for tool in mcp_tools_response.tools:
-                        # Capture tool name in closure
-                        def create_async_tool(tool_name, tool_desc):
-                            async def mcp_tool_call(query: str = "") -> str:
-                                # Call the MCP tool
-                                result = await session.call_tool(tool_name, {"query": query})
+                        # Build a dynamic tool wrapper that forwards all arguments to the MCP server
+                        def create_async_tool(tool_name):
+                            async def mcp_tool_call(**kwargs) -> str:
+                                result = await session.call_tool(tool_name, kwargs)
                                 if result.isError:
                                     return f"Error: {result.content}"
-                                # Extract string result
                                 return result.content[0].text if result.content else ""
                             return mcp_tool_call
+
+                        # Build a Pydantic model from the MCP tool's input schema
+                        # so LangGraph knows the exact parameter names and types
+                        tool_schema = tool.inputSchema or {}
+                        schema_props = tool_schema.get("properties", {})
+                        required_fields = tool_schema.get("required", [])
+
+                        # Dynamically create field annotations for the StructuredTool
+                        field_definitions = {}
+                        for prop_name, prop_info in schema_props.items():
+                            prop_type = str  # MCP tools in this project all use string params
+                            default = ... if prop_name in required_fields else ""
+                            description = prop_info.get("description", "")
+                            field_definitions[prop_name] = (prop_type, Field(default=default, description=description))
                         
+                        args_schema = create_model(f"{tool.name}_Schema", **field_definitions)
+
                         langchain_tools.append(
                             StructuredTool.from_function(
-                                coroutine=create_async_tool(tool.name, tool.description),
+                                coroutine=create_async_tool(tool.name),
                                 name=tool.name,
-                                description=tool.description
+                                description=tool.description,
+                                args_schema=args_schema
                             )
                         )
 
